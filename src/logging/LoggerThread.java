@@ -53,4 +53,22 @@ public class LoggerThread extends Thread {
 		});
 		
 	}
+	
+	/**
+	 * Kill LoggerThread in <code>timeOut</code> ms.
+	 * */
+	public void kill(int timeOut) {
+		
+		isStop = true;
+		
+		try {
+			this.join(timeOut);
+		} catch (InterruptedException e) {
+			logTo.println("Failed to join logger thread!");
+			e.printStackTrace(logTo);
+		}
+		
+		logTo.close();
+		
+	}
 }

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -43,6 +44,7 @@ public class SwingDialogs {
 
 		final JDialog dialog = new JDialog();
 		dialog.setAlwaysOnTop(true);
+		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -96,6 +98,7 @@ public class SwingDialogs {
 		
 		final JDialog dialog = new JDialog();
 		dialog.setAlwaysOnTop(true);
+		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -147,6 +150,7 @@ public class SwingDialogs {
 		
 		final JDialog dialog = new JDialog();
 		dialog.setAlwaysOnTop(true);
+		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -176,6 +180,7 @@ public class SwingDialogs {
 
 		final JDialog dialog = new JDialog();
 		dialog.setAlwaysOnTop(true);
+		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		if (EventQueue.isDispatchThread()) {
 

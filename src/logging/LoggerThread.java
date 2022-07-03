@@ -2,6 +2,7 @@ package logging;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
@@ -13,7 +14,19 @@ public class LoggerThread extends Thread {
 	public volatile boolean isStop = false;
 	
 	public LoggerThread(OutputStream os) {
-		logTo = new PrintWriter(os);
+		this(os, true, Charset.defaultCharset());
+	}
+	
+	public LoggerThread(OutputStream os, Charset cs) {
+		this(os, true, cs);
+	}
+	
+	public LoggerThread(OutputStream os, boolean autoFlush) {
+		this(os, autoFlush, Charset.defaultCharset());
+	}
+	
+	public LoggerThread(OutputStream os, boolean autoFlush, Charset cs) {
+		logTo = new PrintWriter(os, autoFlush, cs);
 	}
 	
 	@Override

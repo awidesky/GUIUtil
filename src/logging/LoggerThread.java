@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-public class LoggerThread extends Thread {
+public class LoggerThread extends Thread { //TODO : add prefix
 
 	private PrintWriter logTo;
 	private LinkedBlockingQueue<Runnable> loggerQueue = new LinkedBlockingQueue<>();

@@ -18,7 +18,11 @@ public class LoggerThread extends Thread {
 	
 	public volatile boolean isStop = false;
 	
-	public LoggerThread(OutputStream os) { //TODO : default construct that use sysout
+	public LoggerThread() { 
+		this(System.out, true, Charset.defaultCharset());
+	}
+	
+	public LoggerThread(OutputStream os) { 
 		this(os, true, Charset.defaultCharset());
 	}
 	

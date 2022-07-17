@@ -3,16 +3,17 @@ package logging;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-public class LoggerThread extends Thread { //TODO : add prefix
+public class LoggerThread extends Thread {
 
 	private PrintWriter logTo;
 	private LinkedBlockingQueue<Runnable> loggerQueue = new LinkedBlockingQueue<>();
 	
-	private SimpleDateFormat datePrefix = null;
+	private DateFormat datePrefix = null;
 	private String prefix = null;
 	
 	public volatile boolean isStop = false;
@@ -76,23 +77,32 @@ public class LoggerThread extends Thread { //TODO : add prefix
 	
 	private Runnable getLogTask(String data) {
 		return () -> {
+			printPrefix();
 			logTo.println(data.replaceAll("\\R", System.lineSeparator()));
 		};
 	}
 	
 	private Runnable getLogTask(Exception e) {
 		return () -> {
+			printPrefix();
 			e.printStackTrace(logTo);
 		};
 	}
 	
 	private Runnable getLogTask(Object obj) {
 		return () -> {
+			printPrefix();
 			logTo.println(obj.toString().replaceAll("\\R", System.lineSeparator()));
 		};
 	}
 	
 
+	
+	private void printPrefix() {
+		if(datePrefix != null) logTo.print("[" + datePrefix.format(new Date()) + "] ");
+		if(prefix != null) logTo.print(prefix);
+	}
+	
 	
 	
 	/**

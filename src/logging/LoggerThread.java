@@ -67,21 +67,29 @@ public class LoggerThread extends Thread {
 	}
 	
 	public void log(String data) {
-
-		loggerQueue.offer(getLogTask(data));
-		
+		try {
+			loggerQueue.put(getLogTask(data));
+		} catch (InterruptedException e) {
+			if(!isStop) log(e);
+		}
 	}
 	
 	public void log(Exception e) {
-		
-		loggerQueue.offer(getLogTask(e));
-		
+		try {
+			loggerQueue.put(getLogTask(e));
+		} catch (InterruptedException e1) {
+			if(!isStop) log(e1);
+		}
 	}
 	
 	public void log(Object... objs) {
-		loggerQueue.offer(() -> {
-			for(Object o : objs) getLogTask(o).run();
-		});
+		try {
+			loggerQueue.put(() -> {
+				for(Object o : objs) getLogTask(o).run();
+			});
+		} catch (InterruptedException e) {
+			if(!isStop) log(e);
+		}
 	}
 	
 	
@@ -129,6 +137,7 @@ public class LoggerThread extends Thread {
 			e.printStackTrace(logTo);
 		}
 		
+		this.interrupt();
 		logTo.close();
 		
 	}

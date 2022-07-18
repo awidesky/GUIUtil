@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,6 +18,9 @@ public class LoggerThread extends Thread {
 	private String prefix = null;
 	
 	public volatile boolean isStop = false;
+	
+	
+	public static final String version = "v1.2.0";
 	
 	public LoggerThread() { 
 		this(System.out, true, Charset.defaultCharset());
@@ -41,6 +45,8 @@ public class LoggerThread extends Thread {
 	@Override
 	public void run() {
 
+		logTo.println("LoggerThread " + version + " started at [" + new SimpleDateFormat("yyyy/MM/dd-kk:mm:ss").format(new Date()) + "]");
+		
 		while (true) {
 
 			if (loggerQueue.isEmpty() && isStop) {

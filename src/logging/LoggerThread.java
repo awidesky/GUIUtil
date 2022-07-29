@@ -2,6 +2,7 @@ package logging;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -39,7 +40,11 @@ public class LoggerThread extends Thread {
 	}
 	
 	public LoggerThread(OutputStream os, boolean autoFlush, Charset cs) {
-		logTo = new PrintWriter(os, autoFlush, cs);
+		this(new PrintWriter(os, autoFlush, cs));
+	}
+	
+	public LoggerThread(Writer wr) { 
+		logTo = new PrintWriter(wr);
 	}
 	
 	@Override

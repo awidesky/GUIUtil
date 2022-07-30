@@ -47,6 +47,14 @@ public class LoggerThread extends Thread {
 		logTo = new PrintWriter(wr);
 	}
 	
+	public void setDatePrefix(DateFormat datePrefix) {
+		this.datePrefix = datePrefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
 	@Override
 	public void run() {
 

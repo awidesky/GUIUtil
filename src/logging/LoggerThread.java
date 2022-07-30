@@ -113,10 +113,7 @@ public class LoggerThread extends Thread {
 	}
 	
 	private Runnable getLogTask(Object obj) {
-		return () -> {
-			printPrefix();
-			logTo.println(obj.toString().replaceAll("\\R", System.lineSeparator()));
-		};
+		return getLogTask(obj.toString());
 	}
 	
 

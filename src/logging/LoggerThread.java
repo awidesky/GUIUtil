@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-public class LoggerThread extends Thread {
+public class LoggerThread extends Thread implements Logger {
 
 	private PrintWriter logTo;
 	private LinkedBlockingQueue<Runnable> loggerQueue = new LinkedBlockingQueue<>();

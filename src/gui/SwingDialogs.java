@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 public class SwingDialogs {
 
 
+	public static Logger logger = Logger.nullLogger;
 
 	/**
 	 * show error dialog.
@@ -20,7 +21,7 @@ public class SwingDialogs {
 	 * */
 	public static void error(String title, String content, Exception e, boolean waitTillClosed) {
 
-		//Main.log("\n");
+		logger.log("\n");
 		String co = content.replace("%e%", (e == null) ? "null" : e.getMessage());
 		
 		if (waitTillClosed) {
@@ -31,8 +32,8 @@ public class SwingDialogs {
 			});
 		}
 		
-		//Main.log("[GUI.error] " + title + "\n\t" + co);
-		//if(e != null) Main.log(e);
+		logger.log("[GUI.error] " + title + "\n\t" + co);
+		if(e != null) logger.log(e);
 		
 	}
 	
@@ -74,7 +75,7 @@ public class SwingDialogs {
 	 * */
 	public static void warning(String title, String content, Exception e, boolean waitTillClosed) {
 
-		//Main.log("\n");
+		logger.log("\n");
 		String co = content.replace("%e%", (e == null) ? "null" : e.getMessage());
 		
 		if (waitTillClosed) {
@@ -85,8 +86,8 @@ public class SwingDialogs {
 			});
 		}
 		
-		//Main.log("[GUI.error] " + title + "\n\t" + co);
-		//if(e != null) Main.log(e);
+		logger.log("[GUI.error] " + title + "\n\t" + co);
+		if(e != null) logger.log(e);
 		
 	}
 	
@@ -128,7 +129,7 @@ public class SwingDialogs {
 	 * */
 	public static void information(String title, String content, boolean waitTillClosed) {
 
-		//Main.log("\n");
+		logger.log("\n");
 
 		if (waitTillClosed) {
 			showInfoDialog(title, content);
@@ -138,7 +139,7 @@ public class SwingDialogs {
 			});
 		}
 		
-		//Main.log("[GUI.information] " + title + "\n\t" + content);
+		logger.log("[GUI.information] " + title + "\n\t" + content);
 		
 	}
 	

@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import logging.Logger;
+
 
 public class SwingDialogs {
 
@@ -19,7 +21,7 @@ public class SwingDialogs {
 	 * show error dialog.
 	 * String <code>"%e%"</code> in <code>content</code> will replaced by error message of given <code>Exception</code> if it's not <code>null</code>
 	 * */
-	public static void error(String title, String content, Exception e, boolean waitTillClosed) {
+	public static void error(String title, String content, Exception e, boolean waitTillClosed) { //TODO : update
 
 		logger.log("\n");
 		String co = content.replace("%e%", (e == null) ? "null" : e.getMessage());

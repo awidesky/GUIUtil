@@ -2,7 +2,7 @@ package logging;
 
 public interface Logger {
 
-	public static final Logger nullLogger = new Logger() {
+	public static final Logger nullLogger = new Logger() { //TODO : update
 		@Override
 		public void log(String data) {}
 		@Override

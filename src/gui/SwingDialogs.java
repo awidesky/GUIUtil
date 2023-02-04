@@ -21,7 +21,7 @@ public class SwingDialogs {
 	 * show error dialog.
 	 * String <code>"%e%"</code> in <code>content</code> will replaced by error message of given <code>Exception</code> if it's not <code>null</code>
 	 * */
-	public static void error(String title, String content, Exception e, boolean waitTillClosed) { //TODO : update
+	public static void error(String title, String content, Exception e, boolean waitTillClosed) { //TODO : update, true should be default
 
 		logger.log("\n");
 		String co = content.replace("%e%", (e == null) ? "null" : e.getMessage());

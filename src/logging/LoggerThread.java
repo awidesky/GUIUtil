@@ -2,7 +2,6 @@ package logging;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,6 +13,8 @@ public class LoggerThread extends Thread implements Logger {
 
 	private PrintWriter logTo;
 	private LinkedBlockingQueue<Runnable> loggerQueue = new LinkedBlockingQueue<>();
+	
+	private boolean verbose = false;
 	
 	private DateFormat datePrefix = null;
 	private String prefix = null;
@@ -40,12 +41,9 @@ public class LoggerThread extends Thread implements Logger {
 	}
 	
 	public LoggerThread(OutputStream os, boolean autoFlush, Charset cs) {
-		this(new PrintWriter(os, autoFlush, cs));
+		logTo = new PrintWriter(os, autoFlush, cs);
 	}
 	
-	public LoggerThread(Writer wr) { 
-		logTo = new PrintWriter(wr);
-	}
 	
 	public void setDatePrefix(DateFormat datePrefix) {
 		this.datePrefix = datePrefix;
@@ -79,6 +77,17 @@ public class LoggerThread extends Thread implements Logger {
 
 	}
 	
+	
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+	
+	public void newLine() {
+		loggerQueue.offer(() -> {
+			logTo.println();
+		});
+	}
+	
 	public void log(String data) {
 		try {
 			loggerQueue.put(getLogTask(data));
@@ -103,6 +112,12 @@ public class LoggerThread extends Thread implements Logger {
 		} catch (InterruptedException e) {
 			if(!isStop) log(e);
 		}
+	}
+	
+	public void logVerbose(String data) {
+
+		if(verbose) log(data);
+		
 	}
 	
 	

@@ -2,13 +2,13 @@ package test;
 
 import java.util.ArrayList;
 
-import logging.LogMaster;
+import logging.LoggerThread;
 
 public class Test {
 
 	public static void main(String[] args) {
 
-		LogMaster l = new LogMaster(System.out);
+		LoggerThread l = new LoggerThread(System.out);
 		l.start();
 		l.log(new ArrayList<String>(), " dfsdf", new Exception("dfasdfa"));
 		l.log("ttttt");

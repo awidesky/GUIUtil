@@ -14,7 +14,7 @@ public class LoggerThread extends Thread {
 
 	private PrintWriter logTo;
 	private	LinkedBlockingQueue<Consumer<PrintWriter>> loggerQueue = new LinkedBlockingQueue<>();
-	private LinkedList<Logger> children = new LinkedList<>();
+	private LinkedList<TaskLogger> children = new LinkedList<>();
 	
 	public volatile boolean isStop = false;
 	private boolean verbose;
@@ -42,8 +42,8 @@ public class LoggerThread extends Thread {
 		logTo = new PrintWriter(os, autoFlush, cs);
 	}
 	
-	public Logger getLogger() {
-		Logger newLogger = new Logger(verbose) {
+	public TaskLogger getLogger() {
+		TaskLogger newLogger = new TaskLogger(verbose) {
 
 			@Override
 			public void queueLogTask(Consumer<PrintWriter> logTask) {

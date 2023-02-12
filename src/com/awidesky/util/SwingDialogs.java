@@ -9,13 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import logging.LoggerInterface;
-
 
 public class SwingDialogs {
 
 
-	public static LoggerInterface logger = LoggerInterface.nullLogger;
+	public static SimpleLogger logger = new SimpleLogger();
 
 	/**
 	 * show error dialog.

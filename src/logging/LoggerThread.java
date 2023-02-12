@@ -26,7 +26,7 @@ public class LoggerThread extends Thread {
 		this(System.out, true, Charset.defaultCharset());
 	}
 	
-	public LoggerThread(OutputStream os) { 
+	public LoggerThread(OutputStream os) {
 		this(os, true, Charset.defaultCharset());
 	}
 	

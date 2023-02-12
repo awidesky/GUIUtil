@@ -5,43 +5,26 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
 
-public abstract class TaskLogger implements Logger {
+public abstract class TaskLogger extends AbstractLogger {
 
 	private DateFormat datePrefix = null;
 	private String prefix = null;
 	
 	public volatile boolean isStop = false;
-	private boolean verbose;
 	
 	public TaskLogger(boolean verbose) {
 		this.verbose = verbose;
 	}
 	
-	/**
-	 * Set date information prefix for this <code>Logger</code> instance.
-	 * if argument is <code>null</code>, no date information prefix is appended,
-	 * */
-	@Override
-	public void setDatePrefix(DateFormat datePrefix) {
-		this.datePrefix = datePrefix;
-	}
 
 	/**
-	 * Set additional prefix for this <code>Logger</code> instance.
-	 * if argument is <code>null</code>, no date information prefix is appended,
-	 * */
-	@Override
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-	
-	/**
 	 * queue a logging task.
-	 * implementation would be like queuing <code>logTask</code> to another 
+	 * implementation would queue <code>logTask</code> to a worker thread 
 	 * */
 	abstract void queueLogTask(Consumer<PrintWriter> logTask);
 	/**
-	 * 
+	 * try to run a logging task <i><b>right away</b></i>.
+	 * @return <code>true</code> if succeed to run the <code>logTask</code> right away
 	 * */
 	abstract boolean runLogTask(Consumer<PrintWriter> logTask);
 	
@@ -84,16 +67,6 @@ public abstract class TaskLogger implements Logger {
 		});
 	}
 	
-	@Override
-	public void logVerbose(String data) {
-		if(verbose) log(data);
-	}
-	
-	@Override
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
-	}
-	
 	
 	private Consumer<PrintWriter> getLogTask(String data) {
 		return (logTo) -> {
@@ -117,7 +90,5 @@ public abstract class TaskLogger implements Logger {
 		if(datePrefix != null) logTo.print("[" + datePrefix.format(new Date()) + "] ");
 		if(prefix != null) logTo.print(prefix);
 	}
-	
-	
 
 }

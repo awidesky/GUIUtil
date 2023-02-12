@@ -1,55 +1,57 @@
 package logging;
 
-import java.text.DateFormat;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 
-public class SimpleLogger implements Logger {
-
-	@Override
-	public void setDatePrefix(DateFormat datePrefix) {
-		// TODO Auto-generated method stub
-		
+/**
+ * An Simple Logger class that prints log to a <code>PrintWriter</code>.
+ * 
+ * @author Eugene Hong
+ * */
+public class SimpleLogger extends AbstractLogger {
+	
+	private PrintWriter logTo;
+	
+	public SimpleLogger() { 
+		this(System.out, true, Charset.defaultCharset());
 	}
-
-	@Override
-	public void setPrefix(String prefix) {
-		// TODO Auto-generated method stub
-		
+	
+	public SimpleLogger(OutputStream os) {
+		this(os, true, Charset.defaultCharset());
+	}
+	
+	public SimpleLogger(OutputStream os, Charset cs) {
+		this(os, true, cs);
+	}
+	
+	public SimpleLogger(OutputStream os, boolean autoFlush) {
+		this(os, autoFlush, Charset.defaultCharset());
+	}
+	
+	public SimpleLogger(OutputStream os, boolean autoFlush, Charset cs) {
+		logTo = new PrintWriter(os, autoFlush, cs);
 	}
 
 	@Override
 	public void newLine() {
-		// TODO Auto-generated method stub
-		
+		logTo.println();
 	}
 
 	@Override
 	public void log(String data) {
-		// TODO Auto-generated method stub
-		
+		logTo.println(data);
 	}
 
 	@Override
 	public void log(Exception e) {
-		// TODO Auto-generated method stub
-		
+		e.printStackTrace(logTo);
 	}
 
 	@Override
 	public void log(Object... objs) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void logVerbose(String data) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setVerbose(boolean verbose) {
-		// TODO Auto-generated method stub
-		
+		Arrays.stream(objs).forEach(logTo::println);
 	}
 
 }

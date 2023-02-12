@@ -1,4 +1,4 @@
-package logging;
+package com.awidesky.util;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;

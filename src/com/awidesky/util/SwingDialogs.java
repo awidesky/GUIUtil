@@ -1,4 +1,4 @@
-package gui;
+package com.awidesky.util;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;

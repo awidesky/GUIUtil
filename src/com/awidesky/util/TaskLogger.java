@@ -1,4 +1,4 @@
-package logging;
+package com.awidesky.util;
 
 import java.io.PrintWriter;
 import java.text.DateFormat;

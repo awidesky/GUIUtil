@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 public class SwingDialogs {
 
 
-	private static AbstractLogger logger = new SimpleLogger();
+	private static AbstractLogger logger = AbstractLogger.nullLogger;
 
 	
 	public static void setLogger(AbstractLogger newLogger) {
@@ -24,7 +24,7 @@ public class SwingDialogs {
 	 * show error dialog.
 	 * String <code>"%e%"</code> in <code>content</code> will replaced by error message of given <code>Exception</code> if it's not <code>null</code>
 	 * */
-	public static void error(String title, String content, Exception e, boolean waitTillClosed) { //TODO : update, true should be default
+	public static void error(String title, String content, Exception e, boolean waitTillClosed) {
 
 		logger.log("\n");
 		String co = content.replace("%e%", (e == null) ? "null" : e.getMessage());
@@ -37,7 +37,7 @@ public class SwingDialogs {
 			});
 		}
 		
-		logger.log("[GUI.error] " + title + "\n\t" + co);
+		logger.log("[SwingDialogs.error] " + title + "\n\t" + co);
 		if(e != null) logger.log(e);
 		
 	}
@@ -91,7 +91,7 @@ public class SwingDialogs {
 			});
 		}
 		
-		logger.log("[GUI.error] " + title + "\n\t" + co);
+		logger.log("[SwingDialogs.warning] " + title + "\n\t" + co);
 		if(e != null) logger.log(e);
 		
 	}
@@ -144,7 +144,7 @@ public class SwingDialogs {
 			});
 		}
 		
-		logger.log("[GUI.information] " + title + "\n\t" + content);
+		logger.log("[SwingDialogs.info] " + title + "\n\t" + content);
 		
 	}
 	

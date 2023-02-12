@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * An Simple Logger class that prints log to a <code>PrintWriter</code>.
@@ -34,24 +35,34 @@ public class SimpleLogger extends AbstractLogger {
 		logTo = new PrintWriter(os, autoFlush, cs);
 	}
 
+	/**
+	 * Prints a empty line without prefix
+	 * */
 	@Override
 	public void newLine() {
 		logTo.println();
 	}
 
+	/**
+	 * Logs a String.
+	 * Each lines will be printed with prefix.
+	 * */
 	@Override
 	public void log(String data) {
-		logTo.println(data);
-	}
-
-	@Override
-	public void log(Exception e) {
-		e.printStackTrace(logTo);
+		for(String line : data.split("\\R")) {
+			printPrefix();
+			logTo.println(line);
+		}
 	}
 
 	@Override
 	public void log(Object... objs) {
-		Arrays.stream(objs).forEach(logTo::println);
+		Arrays.stream(objs).map(Object::toString).forEach(this::log);
+	}
+	
+	private void printPrefix() {
+		if(datePrefix != null) logTo.print("[" + datePrefix.format(new Date()) + "] ");
+		if(prefix != null) logTo.print(prefix + " ");
 	}
 
 }

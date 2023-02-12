@@ -1,7 +1,9 @@
 package com.awidesky.util;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Consumer;
 
@@ -28,6 +30,9 @@ public abstract class TaskLogger extends AbstractLogger {
 	 * */
 	abstract boolean runLogTask(Consumer<PrintWriter> logTask);
 	
+	/**
+	 * Prints a empty line without prefix
+	 * */
 	@Override
 	public void newLine() {
 		queueLogTask((logTo) -> {
@@ -35,60 +40,41 @@ public abstract class TaskLogger extends AbstractLogger {
 		});
 	}
 
+	/**
+	 * Logs a String.
+	 * Each lines will be printed with prefix.
+	 * */
 	@Override
 	public void log(String data) {
 		queueLogTask(getLogTask(data));
 	}
-
-	@Override
-	public void log(Exception e) {
-		queueLogTask(getLogTask(e));
-	}
-
-	@Override
-	public void log(Object... objs) {
-		queueLogTask((logTo) -> {
-			for(Object o : objs) getLogTask(o).accept(logTo);
-		});
-	}
-	
 	
 	public boolean logNow(String data) {
 		return runLogTask(getLogTask(data));
 	}
-	
 	public boolean logNow(Exception e) {
-		return runLogTask(getLogTask(e));
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		return logNow(sw.toString());
 	}
-	
 	public boolean logNow(Object... objs) {
-		return runLogTask((logTo) -> {
-			for(Object o : objs) getLogTask(o).accept(logTo);
-		});
+		return Arrays.stream(objs).map(Object::toString).map(this::logNow).allMatch(b -> b);
 	}
 	
 	
 	private Consumer<PrintWriter> getLogTask(String data) {
 		return (logTo) -> {
-			printPrefix(logTo);
-			logTo.println(data.replaceAll("\\R", System.lineSeparator()));
+			for(String line : data.split("\\R")) {
+				printPrefix(logTo);
+				logTo.println(line);
+			}
 		};
 	}
 	
-	private Consumer<PrintWriter> getLogTask(Exception e) {
-		return (logTo) -> {
-			printPrefix(logTo);
-			e.printStackTrace(logTo);
-		};
-	}
-	
-	private Consumer<PrintWriter> getLogTask(Object obj) {
-		return getLogTask(obj.toString());
-	}
 	
 	private void printPrefix(PrintWriter logTo) {
 		if(datePrefix != null) logTo.print("[" + datePrefix.format(new Date()) + "] ");
-		if(prefix != null) logTo.print(prefix);
+		if(prefix != null) logTo.print(prefix + " ");
 	}
 
 }

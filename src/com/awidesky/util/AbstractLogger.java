@@ -1,6 +1,9 @@
 package com.awidesky.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
+import java.util.Arrays;
 
 
 /**
@@ -13,6 +16,25 @@ public abstract class AbstractLogger {
 	protected boolean verbose = false;
 	protected DateFormat datePrefix = null;
 	protected String prefix = null;
+	
+	/**
+	 * a Simple logger stub that just prints to console 
+	 * */
+	public static final AbstractLogger nullLogger = new AbstractLogger() {
+		{
+			setPrefix("[nullLoger] ");
+		}
+		
+		@Override
+		public void newLine() {
+			System.out.println();
+		}
+		
+		@Override
+		public void log(String data) {
+			System.out.println(data);
+		}
+	}; 
 	
 	/**
 	 * Set date information prefix for this <code>Logger</code> instance.
@@ -31,22 +53,29 @@ public abstract class AbstractLogger {
 	}
 	
 	/**
-	 * Print a newLine character. 
+	 * Print a newLine character without printing prefixes.
+	 * 
 	 * */
 	public abstract void newLine();
 
 	/**
-	 * Logs String <code>data</code>
+	 * Logs a String.
 	 * */
 	public abstract void log(String data);
 	/**
 	 * Logs an <code>Exception</code> 
 	 * */
-	public abstract void log(Exception e);
+	public void log(Exception e) {
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		log(sw.toString());
+	}
 	/**
 	 * Logs an array of <code>Object</code>s
 	 * */
-	public abstract void log(Object... objs);
+	public void log(Object... objs) {
+		Arrays.stream(objs).map(Object::toString).forEach(this::log);
+	}
 	
 	
 	/**

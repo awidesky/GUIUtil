@@ -13,8 +13,13 @@ import javax.swing.SwingUtilities;
 public class SwingDialogs {
 
 
-	public static SimpleLogger logger = new SimpleLogger();
+	private static AbstractLogger logger = new SimpleLogger();
 
+	
+	public static void setLogger(AbstractLogger newLogger) {
+		logger = newLogger;
+	}
+	
 	/**
 	 * show error dialog.
 	 * String <code>"%e%"</code> in <code>content</code> will replaced by error message of given <code>Exception</code> if it's not <code>null</code>

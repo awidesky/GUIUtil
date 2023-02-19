@@ -129,6 +129,7 @@ public class LoggerThread extends Thread {
 		
 		isStop = true;
 		
+		children.parallelStream().filter(l -> l instanceof TaskBufferedLogger).forEach(l -> ((TaskBufferedLogger)l).flush());
 		try {
 			this.join(timeOut);
 		} catch (InterruptedException e) {

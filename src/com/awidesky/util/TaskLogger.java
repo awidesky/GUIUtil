@@ -58,11 +58,11 @@ public abstract class TaskLogger extends AbstractLogger {
 		return logNow(sw.toString());
 	}
 	public boolean logNow(Object... objs) {
-		return Arrays.stream(objs).map(Object::toString).map(this::logNow).allMatch(b -> b);
+		return Arrays.stream(objs).map(Object::toString).allMatch(this::logNow);
 	}
 	
 	
-	private Consumer<PrintWriter> getLogTask(String data) {
+	protected Consumer<PrintWriter> getLogTask(String data) {
 		return (logTo) -> {
 			for(String line : data.split("\\R")) {
 				printPrefix(logTo);

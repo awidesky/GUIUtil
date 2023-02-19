@@ -43,6 +43,10 @@ public class LoggerThread extends Thread {
 	}
 	
 	public TaskLogger getLogger() {
+		return getLogger(null);
+	} 
+	
+	public TaskLogger getLogger(String prefix) {
 		TaskLogger newLogger = new TaskLogger(verbose) {
 
 			@Override
@@ -60,6 +64,29 @@ public class LoggerThread extends Thread {
 			}
 			
 		};
+		newLogger.setPrefix(prefix);
+		children.add(newLogger);
+		return newLogger;
+	}
+	public TaskBufferedLogger getBufferedLogger(String prefix) {
+		TaskBufferedLogger newLogger = new TaskBufferedLogger(verbose) {
+
+			@Override
+			public void queueLogTask(Consumer<PrintWriter> logTask) {
+				try {
+					loggerQueue.put(logTask);
+				} catch (InterruptedException e) {
+					if (!isStop) log(e);
+				}
+			}
+
+			@Override
+			public boolean runLogTask(Consumer<PrintWriter> logTask) {
+				return loggerQueue.offer(logTask);
+			}
+			
+		};
+		newLogger.setPrefix(prefix);
 		children.add(newLogger);
 		return newLogger;
 	}

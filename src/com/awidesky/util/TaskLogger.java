@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 public abstract class TaskLogger extends AbstractLogger {
 
 	private DateFormat datePrefix = null;
-	private String prefix = null;
 	
 	public volatile boolean isStop = false;
 	
@@ -73,7 +72,7 @@ public abstract class TaskLogger extends AbstractLogger {
 	
 	
 	private void printPrefix(PrintWriter logTo) {
-		if(datePrefix != null) logTo.print("[" + datePrefix.format(new Date()) + "] ");
+		if(datePrefix != null) logTo.print("[" + datePrefix.format(new Date()) + "]");
 		if(prefix != null) logTo.print(prefix + " ");
 	}
 

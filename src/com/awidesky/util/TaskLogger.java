@@ -73,7 +73,7 @@ public abstract class TaskLogger extends AbstractLogger {
 	
 	private void printPrefix(PrintWriter logTo) {
 		if(datePrefix != null) logTo.print("[" + datePrefix.format(new Date()) + "]");
-		if(prefix != null) logTo.print(prefix + " ");
+		if(prefix != null) logTo.print(prefix);
 	}
 
 }

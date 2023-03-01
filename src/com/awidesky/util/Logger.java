@@ -34,8 +34,8 @@ public interface Logger extends Closeable, AutoCloseable {
 		}
 
 		private void printPrefix() {
-			if(datePrefix != null) System.out.print("[" + datePrefix.format(new Date()) + "] ");
-			if(prefix != null) System.out.print(prefix + " ");
+			if(datePrefix != null) System.out.print("[" + datePrefix.format(new Date()) + "]");
+			if(prefix != null) System.out.print(prefix);
 		}
 		
 		@Override

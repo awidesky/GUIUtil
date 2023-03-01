@@ -1,6 +1,5 @@
 package com.awidesky.util;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -65,7 +64,7 @@ public class LoggerThread extends Thread {
 			}
 
 			@Override
-			public void close() throws IOException {
+			public void close() {
 				children.remove(this);
 			}
 			
@@ -92,7 +91,7 @@ public class LoggerThread extends Thread {
 			}
 
 			@Override
-			public void close() throws IOException {
+			public void close() {
 				flush();
 				children.remove(this);
 			}

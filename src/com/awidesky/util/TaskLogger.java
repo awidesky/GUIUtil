@@ -64,4 +64,10 @@ public abstract class TaskLogger extends AbstractLogger {
 		};
 	}
 	
+	
+	/**
+	 * TaskLogger just queue logges to LoggerThread, no Exception thrown
+	 * */
+	@Override
+	public abstract void close();
 }

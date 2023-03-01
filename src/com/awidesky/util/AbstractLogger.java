@@ -29,7 +29,7 @@ public abstract class AbstractLogger implements Logger {
 
 	/**
 	 * Set additional prefix for this <code>Logger</code> instance.
-	 * if argument is <code>null</code>, no date information prefix is appended,
+	 * if argument is <code>null</code>, no prefix is appended,
 	 * */
 	@Override
 	public void setPrefix(String prefix) {

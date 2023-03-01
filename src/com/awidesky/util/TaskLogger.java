@@ -60,13 +60,13 @@ public abstract class TaskLogger extends AbstractLogger {
 	
 	protected Consumer<PrintWriter> getLogTask(String data) {
 		return (logTo) -> {
-			logTo.println(getPrefix() + data);
+			data.lines().forEach(l -> logTo.println(getPrefix() + data));
 		};
 	}
 	
 	
 	/**
-	 * TaskLogger just queue logges to LoggerThread, no Exception thrown
+	 * TaskLogger just queue logs to LoggerThread, no Exception thrown
 	 * */
 	@Override
 	public abstract void close();

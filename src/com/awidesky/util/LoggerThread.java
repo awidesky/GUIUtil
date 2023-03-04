@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public class LoggerThread extends Thread {
 
-	private PrintWriter logTo;
+	private PrintWriter logTo = null;
 	private	LinkedBlockingQueue<Consumer<PrintWriter>> loggerQueue = new LinkedBlockingQueue<>();
 	private Set<TaskLogger> children = Collections.synchronizedSet(new HashSet<TaskLogger>());
 	
@@ -25,19 +25,21 @@ public class LoggerThread extends Thread {
 
 	public static final String version = "v1.7.0";
 	
-	public LoggerThread(OutputStream os) {
-		this(os, true, Charset.defaultCharset());
-	}
+	public LoggerThread() {}
 	
-	public LoggerThread(OutputStream os, Charset cs) {
-		this(os, true, cs);
+	public void setLogDestination(OutputStream os) throws IllegalArgumentException {
+		setLogDestination(os, true, Charset.defaultCharset());
 	}
-	
-	public LoggerThread(OutputStream os, boolean autoFlush) {
-		this(os, autoFlush, Charset.defaultCharset());
+	public void setLogDestination(OutputStream os, Charset cs) throws IllegalArgumentException {
+		setLogDestination(os, true, cs);
 	}
-	
-	public LoggerThread(OutputStream os, boolean autoFlush, Charset cs) {
+	public void setLogDestination(OutputStream os, boolean autoFlush) throws IllegalArgumentException {
+		setLogDestination(os, autoFlush, Charset.defaultCharset());
+	}
+	public void setLogDestination(OutputStream os, boolean autoFlush, Charset cs) throws IllegalArgumentException {
+		if(logTo != null) {
+			throw new IllegalArgumentException("log output stream is already set, cannot modify!");
+		}
 		logTo = new PrintWriter(os, autoFlush, cs);
 	}
 	

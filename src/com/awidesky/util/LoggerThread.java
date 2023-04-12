@@ -1,6 +1,7 @@
 package com.awidesky.util;
 
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
@@ -23,7 +24,7 @@ public class LoggerThread extends Thread {
 	private boolean verbose = false;
 	private DateFormat datePrefix = null;
 
-	public static final String version = "v1.8.0";
+	public static final String version = "v1.0.0";
 	
 	public LoggerThread() {}
 	
@@ -40,7 +41,7 @@ public class LoggerThread extends Thread {
 		if(logTo != null) {
 			throw new IllegalArgumentException("log output stream is already set, cannot modify!");
 		}
-		logTo = new PrintWriter(os, autoFlush, cs);
+		logTo = new PrintWriter(new OutputStreamWriter(os, cs), autoFlush);
 	}
 	
 	public TaskLogger getLogger() {

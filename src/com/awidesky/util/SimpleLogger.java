@@ -2,6 +2,7 @@ package com.awidesky.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
@@ -27,7 +28,7 @@ public class SimpleLogger extends AbstractLogger {
 	}
 	
 	public SimpleLogger(OutputStream os, boolean autoFlush, Charset cs) {
-		logTo = new PrintWriter(os, autoFlush, cs);
+		logTo = new PrintWriter(new OutputStreamWriter(os, cs), autoFlush);
 	}
 
 	/**

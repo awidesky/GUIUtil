@@ -60,7 +60,7 @@ public abstract class TaskLogger extends AbstractLogger {
 	
 	protected Consumer<PrintWriter> getLogTask(String data) {
 		return (logTo) -> {
-			data.lines().forEach(l -> logTo.println(getPrefix() + l));
+			Arrays.stream(data.split("\n")).forEach(l -> logTo.println(getPrefix() + l));
 		};
 	}
 	

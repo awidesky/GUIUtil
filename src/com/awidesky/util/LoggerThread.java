@@ -26,7 +26,7 @@ public class LoggerThread extends Thread {
 
 	public static final String version = "v1.0.0";
 	
-	public LoggerThread() {}
+	public LoggerThread() { super("LoggerThread" + version); }
 	
 	public void setLogDestination(OutputStream os) throws IllegalArgumentException {
 		setLogDestination(os, true, Charset.defaultCharset());
@@ -164,7 +164,7 @@ public class LoggerThread extends Thread {
 		}
 		
 		this.interrupt();
-		logTo.close();
+		if(logTo != null) logTo.close();
 		
 	}
 	

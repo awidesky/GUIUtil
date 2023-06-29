@@ -7,7 +7,7 @@
  * Please refer to LICENSE
  * */
 
-package com.awidesky.util;
+package io.github.awidesky.guiUtil;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;

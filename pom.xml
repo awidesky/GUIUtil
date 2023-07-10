@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.github.awidesky</groupId>
+	<artifactId>GUIUtil</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>GUIUtil</name>
+	<description>Java GUI &amp; Logger Utility</description>
+	<url>https://github.com/awidesky/TextViewer</url>
+	<licenses>
+		<license>
+			<name>zlib License</name>
+			<url>http://www.zlib.net/zlib_license.html</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Eugene Hong</name>
+			<email>awidesky@naver.com</email>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>1.17</source>
+					<target>1.17</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

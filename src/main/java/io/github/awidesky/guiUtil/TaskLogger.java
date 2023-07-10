@@ -7,7 +7,7 @@
  * Please refer to LICENSE
  * */
 
-package com.awidesky.util;
+package io.github.awidesky.guiUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

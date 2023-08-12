@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
 /**
- * An Simple Logger class that prints log to a <code>PrintWriter</code>.
+ * A Simple Logger class that prints log to given {@code OutputStream}.
  * 
  * @author Eugene Hong
  * */
@@ -24,24 +24,40 @@ public class SimpleLogger extends AbstractLogger {
 	
 	private PrintWriter logTo;
 	
+	/**
+	 * Creates a logger with given {@code OutputStream}.
+	 * Logged {@code String}s are encoded with {@code Charset#defaultCharset()}, and auto flushed
+	 * into the {@code OutputStream}.
+	 * */
 	public SimpleLogger(OutputStream os) {
 		this(os, true, Charset.defaultCharset());
 	}
 	
+	/**
+	 * Creates a logger with given {@code OutputStream} and {@code Charset}.
+	 * Logged {@code String}s are auto flushed into the {@code OutputStream}.  
+	 * */
 	public SimpleLogger(OutputStream os, Charset cs) {
 		this(os, true, cs);
 	}
 	
+	/**
+	 * Creates a logger.
+	 * Logged {@code String}s are encoded with {@code Charset#defaultCharset()}
+	 * */
 	public SimpleLogger(OutputStream os, boolean autoFlush) {
 		this(os, autoFlush, Charset.defaultCharset());
 	}
 	
+	/**
+	 * Creates a logger.
+	 * */
 	public SimpleLogger(OutputStream os, boolean autoFlush, Charset cs) {
 		logTo = new PrintWriter(new OutputStreamWriter(os, cs), autoFlush);
 	}
 
 	/**
-	 * Prints a empty line without prefix
+	 * Logs an empty new line without prefix
 	 * */
 	@Override
 	public void newLine() {
@@ -49,14 +65,16 @@ public class SimpleLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Logs a String.
-	 * Each lines will be printed with prefix.
+	 * Logs a String with prefix.
 	 * */
 	@Override
 	public void log(String data) {
 		logTo.println(getPrefix() + data);
 	}
 
+	/**
+	 * Close the Logger and associated resource.
+	 * */
 	@Override
 	public void close() throws IOException {
 		logTo.flush();

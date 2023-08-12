@@ -18,24 +18,39 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-
+/**
+ * An utility class that has static methods for various dialog functionality like 
+ * error({@code JOptionPane#ERROR_MESSAGE}), warning({@code JOptionPane#WARNING_MESSAGE}), 
+ * information({@code JOptionPane#INFORMATION_MESSAGE}) and confirmation
+ * ({@code JOptionPane#showConfirmDialog(java.awt.Component, Object)}.
+ * Each utility methods can called outside of {@code Event Dispatch Thread}, and whether wait for user to 
+ * close the dialog or not can be set via {@code waitTillClosed} parameter in each methods.
+ * 
+ * <p>{@code SwingDialogs} has it's own {@code static Logger}, which is {@code Logger#consoleLogger} in default.
+ * It is changeable via {@code SwingDialogs#setLogger(AbstractLogger)}.
+ * */
 public class SwingDialogs {
 
 
 	private static Logger logger = Logger.consoleLogger;
 
 	
-	public static void setLogger(AbstractLogger newLogger) {
+	public static void setLogger(AbstractLogger newLogger) {//TODO : Logger
 		logger = newLogger;
 	}
 	
 	/**
-	 * show error dialog.
-	 * String <code>"%e%"</code> in <code>content</code> will replaced by error message of given <code>Exception</code> if it's not <code>null</code>
+	 * Show an error dialog.
+	 * String <code>"%e%"</code> in <code>content</code> will replaced by error message({@code Exception#getMessage()}) 
+	 * of given <code>Exception</code> if it's not <code>null</code>
+	 * 
+	 * @param e Return value of {@code e.getMessage()} will replaced with {@code %e%} of {@code content}.
+	 * 			If {@code e} or {@code e.getMessage()} is {code null}, {@code %e%} will be replaced to {@code "null"}
+	 * @param waitTillClosed If {@code true}, this method will return after user closes the dialog.
 	 * */
 	public static void error(String title, String content, Exception e, boolean waitTillClosed) {
 
-		logger.log("\n");
+		logger.log("\n");//TODO : no need?
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		
 		if (waitTillClosed) {
@@ -58,7 +73,7 @@ public class SwingDialogs {
 	private static void showErrorDialog(String title, String content) {
 
 		final JDialog dialog = new JDialog();
-		dialog.setAlwaysOnTop(true);
+		dialog.setAlwaysOnTop(true); //TODO : dispose_on_close
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		if (EventQueue.isDispatchThread()) {
@@ -83,9 +98,13 @@ public class SwingDialogs {
 	
 	
 	/**
-	 * show warning dialog.
-	 * String <code>"%e%"</code> in <code>content</code> will replaced by warning message of given <code>Exception</code> if it's not <code>null</code>
+	 * Show a warning dialog.
+	 * String <code>"%e%"</code> in <code>content</code> will replaced by warning message of 
+	 * given <code>Exception</code> if it's not <code>null</code>
 	 * 
+	 * @param e Return value of {@code e.getMessage()} will replaced with {@code %e%} of {@code content}.
+	 * 			If {@code e} or {@code e.getMessage()} is {code null}, {@code %e%} will be replaced to {@code "null"}
+	 * @param waitTillClosed If {@code true}, this method will return after user closes the dialog.
 	 * */
 	public static void warning(String title, String content, Exception e, boolean waitTillClosed) {
 
@@ -137,9 +156,9 @@ public class SwingDialogs {
 	
 	
 	/**
-	 * show information dialog.
-	 * @param waitTillClosed 
+	 * Show an information dialog.
 	 * 
+	 * @param waitTillClosed If {@code true}, this method will return after user closes the dialog.
 	 * */
 	public static void information(String title, String content, boolean waitTillClosed) {
 
@@ -188,8 +207,10 @@ public class SwingDialogs {
 	
 
 	/**
-	 * Ask user to do confirm something with <code>JOptionPane{@link #showConfirmDialog(String, String, JDialog)}</code>. <br>
-	 * This method checks if current thread is EDT or not, so you don't have to check it or avoid thread deadlock manually.
+	 * Show a confirmation dialog.
+	 * This method returns after user closed the dialog.
+	 * 
+	 * @return {@code true} if user chose {@code yes}, otherwise {@code false}.
 	 * */
 	public static boolean confirm(String title, String message) {
 

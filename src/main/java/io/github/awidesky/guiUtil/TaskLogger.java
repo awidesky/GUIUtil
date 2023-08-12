@@ -14,29 +14,41 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+/**
+ * An abstract Logger class for one-consumer, multi-provider model that manages each logs as "task"
+ * (whose type is {@code Consumer<PrintWriter>})
+ * <p>log() method family call does not actually write the content to external log destination.
+ * Instead, log content will be packed in a task. The content is actually written 
+ * when the task is executed.
+ * 
+ * <p><code>TaskLogger</code> provides abstract methods that queue({@code TaskLogger#queueLogTask(Consumer)}) 
+ * or run({@code TaskLogger#runLogTask(Consumer)}) the task. The queue(if exists) should be generated and managed in 
+ * another class or subclass. <code>TaskLogger</code> does not know or care about the queue.
+ * */
 public abstract class TaskLogger extends AbstractLogger {
 
-	public volatile boolean isStop = false;
-	
+	/**
+	 * Creates a task based logger.
+	 * */
 	public TaskLogger(boolean verbose, String prefix) {
 		this.verbose = verbose;
 		this.prefix = prefix;
 	}
-	
 
 	/**
-	 * queue a logging task.
-	 * implementation would queue <code>logTask</code> to a worker thread 
+	 * Queue a log task.
+	 * Implementation may queue given <code>logTask</code> to a worker thread. 
 	 * */
-	abstract void queueLogTask(Consumer<PrintWriter> logTask);
+	protected abstract void queueLogTask(Consumer<PrintWriter> logTask);
 	/**
-	 * try to run a logging task <i><b>right away</b></i>.
+	 * Try to run a log task <i><b>right away</b></i>.
+	 * 
 	 * @return <code>true</code> if succeed to run the <code>logTask</code> right away
 	 * */
-	abstract boolean runLogTask(Consumer<PrintWriter> logTask);
+	protected abstract boolean runLogTask(Consumer<PrintWriter> logTask);
 	
 	/**
-	 * Prints a empty line without prefix
+	 * Logs a empty line without any prefix.
 	 * */
 	@Override
 	public void newLine() {
@@ -47,36 +59,49 @@ public abstract class TaskLogger extends AbstractLogger {
 
 	/**
 	 * Logs a String.
-	 * Each lines will be printed with prefix.
 	 * */
 	@Override
 	public void log(String data) {
 		queueLogTask(getLogTask(data));
 	}
 	
+	/**
+	 * Try to log a String <i><b>right away</b></i>.
+	 * 
+	 * @return <code>true</code> if succeed to log a String right away.
+	 * */
 	public boolean logNow(String data) {
 		return runLogTask(getLogTask(data));
 	}
+	/**
+	 * Try to log an Exception <i><b>right away</b></i>.
+	 * 
+	 * @return <code>true</code> if succeed to log an Exception right away.
+	 * */
 	public boolean logNow(Exception e) {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		return logNow(sw.toString());
 	}
+	/**
+	 * Try to log Objects(by calling {@code Object#toString()}) <i><b>right away</b></i>.
+	 * 
+	 * @return <code>true</code> if succeed to log all Objects right away.
+	 * */
 	public boolean logNow(Object... objs) {
 		return Arrays.stream(objs).map(Object::toString).allMatch(this::logNow);
 	}
 	
-	
+	/**
+	 * Prefix will printed only once even if the String is multiple line.
+	 * */
 	protected Consumer<PrintWriter> getLogTask(String data) {
 		return (logTo) -> {
-			Arrays.stream(data.split("\n")).forEach(l -> logTo.println(getPrefix() + l));
+			logTo.println(getPrefix() + data);
 		};
 	}
 	
-	
-	/**
-	 * TaskLogger just queue logs to LoggerThread, no Exception thrown
-	 * */
+	/** Close the logger. */
 	@Override
 	public abstract void close();
 }

@@ -17,7 +17,7 @@ import java.util.Date;
 
 
 /**
- * An Abstract class for a Logger object.
+ * An Abstract class for a {@code Logger} class with default implementations of general methods.
  * 
  * @author Eugene Hong
  * */
@@ -30,7 +30,8 @@ public abstract class AbstractLogger implements Logger {
 	
 	/**
 	 * Set date information prefix for this <code>Logger</code> instance.
-	 * if argument is <code>null</code>, no date information prefix is appended,
+	 * if argument is <code>null</code>, no date information prefix is appended.
+	 * Date prefix is always appended very first of the line.
 	 * */
 	@Override
 	public void setDatePrefix(DateFormat datePrefix) {
@@ -39,7 +40,10 @@ public abstract class AbstractLogger implements Logger {
 
 	/**
 	 * Set additional prefix for this <code>Logger</code> instance.
-	 * if argument is <code>null</code>, no prefix is appended,
+	 * if argument is <code>null</code>, no additional prefix is appended.
+	 * The additional prefix is always appended after date prefix(if exists).
+	 * 
+	 * @see Logger#setDatePrefix(DateFormat)
 	 * */
 	@Override
 	public void setPrefix(String prefix) {
@@ -47,7 +51,7 @@ public abstract class AbstractLogger implements Logger {
 	}
 	
 	/**
-	 * Generates prefix String
+	 * Generates prefix String(date prefix + additional prefix)
 	 * */
 	protected String getPrefix() {
 		StringBuilder sb = new StringBuilder("");
@@ -57,7 +61,7 @@ public abstract class AbstractLogger implements Logger {
 	}
 	
 	/**
-	 * Logs an <code>Exception</code> 
+	 * Logs an <code>Exception</code>.
 	 * */
 	@Override
 	public void log(Exception e) {
@@ -66,7 +70,7 @@ public abstract class AbstractLogger implements Logger {
 		log(sw.toString());
 	}
 	/**
-	 * Logs an array of <code>Object</code>s
+	 * Logs an array of <code>Object</code>s by calling {@code Object#toString()}.
 	 * */
 	@Override
 	public void log(Object... objs) {
@@ -80,6 +84,13 @@ public abstract class AbstractLogger implements Logger {
 	@Override
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
+	}
+	/**
+	 * Set verbosity of this <code>Logger</code> object.
+	 * */
+	@Override
+	public boolean isVerbose() {
+		return verbose;
 	}
 	/**
 	 * Log in verbose mode.

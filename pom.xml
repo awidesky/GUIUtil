@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.awidesky</groupId>
 	<artifactId>GUIUtil</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>GUIUtil</name>
 	<description>Java GUI &amp; Logger Utility</description>
-	<url>https://github.com/awidesky/TextViewer</url>
+	<url>https://github.com/awidesky/GUIUtil</url>
 	<licenses>
 		<license>
 			<name>zlib License</name>
@@ -27,6 +27,11 @@
 		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 
+	<scm>
+		<connection>scm:git:git://github.com/awidesky/GUIUtil.git</connection>
+		<developerConnection>scm:git:ssh://github.com:awidesky/GUIUtil.git</developerConnection>
+		<url>https://github.com/awidesky/GUIUtil/tree/master</url>
+	</scm>
 	<build>
 		<plugins>
 			<plugin>
@@ -35,6 +40,61 @@
 				<configuration>
 					<source>17</source>
 					<target>17</target>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.5.0</version>
+				<configuration>
+					<additionalJOption>-Xdoclint:none</additionalJOption>
+					<encoding>UTF-8</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.13</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 		</plugins>

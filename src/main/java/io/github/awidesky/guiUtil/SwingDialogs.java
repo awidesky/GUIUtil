@@ -52,6 +52,9 @@ public class SwingDialogs {
 
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		
+		logger.log("[SwingDialogs.error] " + title + "\n\t" + co);
+		if(e != null) logger.log(e);
+		
 		if (waitTillClosed) {
 			showErrorDialog(title, co);
 		} else {
@@ -59,9 +62,6 @@ public class SwingDialogs {
 				showErrorDialog(title, co);
 			});
 		}
-		
-		logger.log("[SwingDialogs.error] " + title + "\n\t" + co);
-		if(e != null) logger.log(e);
 		
 	}
 	
@@ -109,6 +109,9 @@ public class SwingDialogs {
 
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		
+		logger.log("[SwingDialogs.warning] " + title + "\n\t" + co);
+		if(e != null) logger.log(e);
+		
 		if (waitTillClosed) {
 			showWarningDialog(title, co);
 		} else {
@@ -116,9 +119,6 @@ public class SwingDialogs {
 				showWarningDialog(title, co);
 			});
 		}
-		
-		logger.log("[SwingDialogs.warning] " + title + "\n\t" + co);
-		if(e != null) logger.log(e);
 		
 	}
 	
@@ -159,6 +159,8 @@ public class SwingDialogs {
 	 * @param waitTillClosed If {@code true}, this method will return after user closes the dialog.
 	 * */
 	public static void information(String title, String content, boolean waitTillClosed) {
+		
+		logger.log("[SwingDialogs.info] " + title + "\n\t" + content);
 
 		if (waitTillClosed) {
 			showInfoDialog(title, content);
@@ -167,8 +169,6 @@ public class SwingDialogs {
 				showInfoDialog(title, content);
 			});
 		}
-		
-		logger.log("[SwingDialogs.info] " + title + "\n\t" + content);
 		
 	}
 	
@@ -210,6 +210,8 @@ public class SwingDialogs {
 	 * */
 	public static boolean confirm(String title, String message) {
 
+		logger.log("[SwingDialogs.confirm] " + title + "\n\t" + message);
+
 		final JDialog dialog = new JDialog();
 		dialog.setAlwaysOnTop(true);
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -242,6 +244,8 @@ public class SwingDialogs {
 	}
 	
 	private static boolean showConfirmDialog(String title, String message, JDialog dialog) {
-		return JOptionPane.showConfirmDialog(dialog, message, title,JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+		boolean result = JOptionPane.showConfirmDialog(dialog, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION; 
+		logger.log("[SwingDialogs.confirm] response was : " + (result ? " Yes" : "No"));
+		return result;
 	} 
 }

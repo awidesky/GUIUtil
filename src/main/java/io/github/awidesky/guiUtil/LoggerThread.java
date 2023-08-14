@@ -31,8 +31,8 @@ import java.util.function.Consumer;
  * <p>Each Thread or task can have their {@code TaskLogger} created by <code>LoggerThread#getLogger</code> or
  * <code>LoggerThread#getBufferedLogger</code> methods, and queued log tasks are executed in the {@code LoggerThread}.
  * {@code LoggerThread} constantly checks the queue and executes log tasks. If <code>autoFlush</code> in 
- * {@code LoggerThread#setLogDestination(OutputStream, boolean, Charset)} is {@code true}, log Strings will flushed into 
- * {@code OutputStream} after each log task execution.
+ * {@code LoggerThread#setLogDestination(OutputStream, boolean, Charset)} is {@code true}, backing {@code PrintWriter}
+ * of this logger thread's <code>autoFlush</code> will also be true.
  * 
  * <p>{@code LoggerThread#getLogger()} method family will create a normal {@code TaskLogger}; logs will queued every time you call 
  * {@code log} methods. On the other hand, {@code LoggerThread#getBufferedLogger()} method family will create {@code TaskBufferedLogger}; 
@@ -188,9 +188,7 @@ public class LoggerThread extends Thread {
 
 			try {
 				loggerQueue.take().accept(logTo);
-				//TODO : flush logTo
 			} catch (InterruptedException e) {
-				//TODO : show GUI...? 너무 복잡하게 관계가 얽히나?
 				logTo.println("LoggerThread Interrupted! : " + e.getMessage());
 				logTo.println("Closing LoggerThread..");
 				break;

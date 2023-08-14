@@ -71,9 +71,7 @@ public class SwingDialogs {
 	 * */
 	private static void showErrorDialog(String title, String content) {
 
-		final JDialog dialog = new JDialog();
-		dialog.setAlwaysOnTop(true); //TODO : dispose_on_close
-		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		final JDialog dialog = createDialog();
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -128,9 +126,7 @@ public class SwingDialogs {
 	 * */
 	private static void showWarningDialog(String title, String content) {
 		
-		final JDialog dialog = new JDialog();
-		dialog.setAlwaysOnTop(true);
-		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		final JDialog dialog = createDialog();
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -178,9 +174,7 @@ public class SwingDialogs {
 	 * */
 	private static void showInfoDialog(String title, String content) {
 		
-		final JDialog dialog = new JDialog();
-		dialog.setAlwaysOnTop(true);
-		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		final JDialog dialog = createDialog();
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -212,9 +206,7 @@ public class SwingDialogs {
 
 		logger.log("[SwingDialogs.confirm] " + title + "\n\t" + message);
 
-		final JDialog dialog = new JDialog();
-		dialog.setAlwaysOnTop(true);
-		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		final JDialog dialog = createDialog();
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -247,5 +239,12 @@ public class SwingDialogs {
 		boolean result = JOptionPane.showConfirmDialog(dialog, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION; 
 		logger.log("[SwingDialogs.confirm] response was : " + (result ? " Yes" : "No"));
 		return result;
-	} 
+	}
+	
+	private static JDialog createDialog() {
+		JDialog dialog = new JDialog();
+		dialog.setAlwaysOnTop(true);
+		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		return dialog;
+	}
 }

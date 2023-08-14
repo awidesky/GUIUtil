@@ -39,7 +39,7 @@ import java.util.function.Consumer;
  * logs will not queued to {@code LoggerThread} unless {@code TaskBufferedLogger#flush()} is called.
  * 
  * <p>{@code LoggerThread} is not a Daemon Thread; since external output destination({@code OutputStream}) is not closed until
- * {@code LoggerThread#kill(int)} is called. {@code LoggerThread#kill(int)} must be called before the main application terminates.
+ * {@code LoggerThread#shutdown(int)} is called. {@code LoggerThread#shutdown(int)} must be called before the main application terminates.
  * */
 public class LoggerThread extends Thread {
 
@@ -246,7 +246,7 @@ public class LoggerThread extends Thread {
 	 * A timeout of {@code 0} means to wait forever.
 	 * If the time has past and this LoggerThread is not dead, interrupt.
 	 * */
-	public void kill(int timeOut) { //TODO : Rename to shutdown
+	public void shutdown(int timeOut) {
 		
 		isStop = true;
 		

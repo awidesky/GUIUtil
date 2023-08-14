@@ -50,7 +50,6 @@ public class SwingDialogs {
 	 * */
 	public static void error(String title, String content, Exception e, boolean waitTillClosed) {
 
-		logger.log("\n");//TODO : no need?
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		
 		if (waitTillClosed) {
@@ -108,7 +107,6 @@ public class SwingDialogs {
 	 * */
 	public static void warning(String title, String content, Exception e, boolean waitTillClosed) {
 
-		logger.log("\n");
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		
 		if (waitTillClosed) {
@@ -161,8 +159,6 @@ public class SwingDialogs {
 	 * @param waitTillClosed If {@code true}, this method will return after user closes the dialog.
 	 * */
 	public static void information(String title, String content, boolean waitTillClosed) {
-
-		logger.log("\n");
 
 		if (waitTillClosed) {
 			showInfoDialog(title, content);

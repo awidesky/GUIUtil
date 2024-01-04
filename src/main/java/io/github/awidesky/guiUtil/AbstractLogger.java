@@ -14,6 +14,7 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 
 /**
@@ -74,7 +75,7 @@ public abstract class AbstractLogger implements Logger {
 	 * */
 	@Override
 	public void log(Object... objs) {
-		Arrays.stream(objs).map(Object::toString).forEach(this::log);
+		log(Arrays.stream(objs).map(Object::toString).collect(Collectors.joining("\n")));
 	}
 	
 	

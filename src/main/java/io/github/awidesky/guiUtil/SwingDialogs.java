@@ -265,8 +265,17 @@ public class SwingDialogs {
 	 * @return User's answer. If user canceled, {@code null}.
 	 * */
 	public static String input(String title, String prompt) {
+		return input(title, prompt, null);
+	}
+	
+	/**
+	 * Show an input dialog with given initial value.
+	 * 
+	 * @return User's answer. If user canceled, {@code null}.
+	 * */
+	public static String input(String title, String prompt, Object initialValue) {
 		logger.log("[SwingDialogs.input] " + title + "\n\t" + prompt);
-		String ret = showInputDialog(title, prompt);
+		String ret = showInputDialog(title, prompt, initialValue);
 		logger.log("[SwingDialogs.input] Input was : " + ret);
 		return ret;
 	}
@@ -275,13 +284,13 @@ public class SwingDialogs {
 	 * Show input dialog.
 	 * this method returns after the dialog closed.
 	 * */
-	private static String showInputDialog(String title, String prompt) {
+	private static String showInputDialog(String title, String prompt, Object initialValue) {
 
 		final JDialog dialog = createDialog("[SwingDialogs.input]");
 		
 		if (EventQueue.isDispatchThread()) {
 
-			String str = JOptionPane.showInputDialog(dialog, prompt.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.QUESTION_MESSAGE);
+			String str = (String)JOptionPane.showInputDialog(dialog, prompt.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.QUESTION_MESSAGE, null, null, initialValue);
 			dialog.dispose();
 			return str;
 			
@@ -289,7 +298,7 @@ public class SwingDialogs {
 			AtomicReference<String> ret = new AtomicReference<>();
 			try {
 				SwingUtilities.invokeAndWait(() -> {
-					ret.set(JOptionPane.showInputDialog(dialog, prompt.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.QUESTION_MESSAGE));
+					ret.set((String)JOptionPane.showInputDialog(dialog, prompt.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.QUESTION_MESSAGE, null, null, initialValue));
 					dialog.dispose();
 				});
 				return ret.getAcquire();

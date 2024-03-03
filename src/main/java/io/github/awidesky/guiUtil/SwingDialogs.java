@@ -81,17 +81,19 @@ public class SwingDialogs {
 	 * */
 	private static void showErrorDialog(String title, String content) {
 
-		final JDialog dialog = createDialog();
+		final JDialog dialog = createDialog("[SwingDialogs.error]");
 		
 		if (EventQueue.isDispatchThread()) {
 
 			JOptionPane.showMessageDialog(dialog, content.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.ERROR_MESSAGE);
+			dialog.dispose();
 			
 		} else {
 			
 			try {
 				SwingUtilities.invokeAndWait(() -> {
 					JOptionPane.showMessageDialog(dialog, content.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.ERROR_MESSAGE);
+					dialog.dispose();
 				});
 			} catch (Exception e) {
 				error("Exception in Thread working(SwingWorker)", "%e%", (e instanceof InvocationTargetException) ? (Exception)e.getCause() : e, false);
@@ -136,17 +138,19 @@ public class SwingDialogs {
 	 * */
 	private static void showWarningDialog(String title, String content) {
 		
-		final JDialog dialog = createDialog();
+		final JDialog dialog = createDialog("[SwingDialogs.warning]");
 		
 		if (EventQueue.isDispatchThread()) {
 
 			JOptionPane.showMessageDialog(dialog, content.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.WARNING_MESSAGE);
+			dialog.dispose();
 			
 		} else {
 			
 			try {
 				SwingUtilities.invokeAndWait(() -> {
 					JOptionPane.showMessageDialog(dialog, content.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.WARNING_MESSAGE);
+					dialog.dispose();
 				});
 			} catch (Exception e) {
 				error("Exception in Thread working(SwingWorker)", "%e%", (e instanceof InvocationTargetException) ? (Exception)e.getCause() : e, false);
@@ -184,17 +188,19 @@ public class SwingDialogs {
 	 * */
 	private static void showInfoDialog(String title, String content) {
 		
-		final JDialog dialog = createDialog();
+		final JDialog dialog = createDialog("[SwingDialogs.info]");
 		
 		if (EventQueue.isDispatchThread()) {
 
 			JOptionPane.showMessageDialog(dialog, content.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.INFORMATION_MESSAGE);
+			dialog.dispose();
 			
 		} else {
 			
 			try {
 				SwingUtilities.invokeAndWait(() -> {
 					JOptionPane.showMessageDialog(dialog, content.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.INFORMATION_MESSAGE);
+					dialog.dispose();
 				});
 			} catch (Exception e) {
 				error("Exception in Thread working(SwingWorker)", "%e%", (e instanceof InvocationTargetException) ? (Exception)e.getCause() : e, false);
@@ -216,11 +222,10 @@ public class SwingDialogs {
 
 		logger.log("[SwingDialogs.confirm] " + title + "\n\t" + message);
 
-		final JDialog dialog = createDialog();
 		
 		if (EventQueue.isDispatchThread()) {
 
-			return showConfirmDialog(title, message, dialog);
+			return showConfirmDialog(title, message);
 			
 		} else {
 			
@@ -229,7 +234,7 @@ public class SwingDialogs {
 			try {
 
 				SwingUtilities.invokeAndWait(() -> {
-					result.set(showConfirmDialog(title, message, dialog));
+					result.set(showConfirmDialog(title, message));
 				});
 				
 				return result.get();
@@ -245,8 +250,10 @@ public class SwingDialogs {
 
 	}
 	
-	private static boolean showConfirmDialog(String title, String message, JDialog dialog) {
-		boolean result = JOptionPane.showConfirmDialog(dialog, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION; 
+	private static boolean showConfirmDialog(String title, String message) {
+		final JDialog dialog = createDialog("[SwingDialogs.confirm]");
+		boolean result = JOptionPane.showConfirmDialog(dialog, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+		dialog.dispose();
 		logger.log("[SwingDialogs.confirm] response was : " + (result ? " Yes" : "No"));
 		return result;
 	}
@@ -270,17 +277,20 @@ public class SwingDialogs {
 	 * */
 	private static String showInputDialog(String title, String prompt) {
 
-		final JDialog dialog = createDialog();
+		final JDialog dialog = createDialog("[SwingDialogs.input]");
 		
 		if (EventQueue.isDispatchThread()) {
 
-			return JOptionPane.showInputDialog(dialog, prompt.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.QUESTION_MESSAGE);
+			String str = JOptionPane.showInputDialog(dialog, prompt.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.QUESTION_MESSAGE);
+			dialog.dispose();
+			return str;
 			
 		} else {
 			AtomicReference<String> ret = new AtomicReference<>();
 			try {
 				SwingUtilities.invokeAndWait(() -> {
 					ret.set(JOptionPane.showInputDialog(dialog, prompt.replace("\n", System.lineSeparator()), title.replace("\n", System.lineSeparator()), JOptionPane.QUESTION_MESSAGE));
+					dialog.dispose();
 				});
 				return ret.getAcquire();
 			} catch (Exception e) {
@@ -314,6 +324,7 @@ public class SwingDialogs {
 		JOptionPane op = new JOptionPane(pPnl, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		JDialog dlg = op.createDialog(title.replace("\n", System.lineSeparator()));
+		dlg.setName("[SwingDialogs.inputPassword]");
 
 		// Wire up FocusListener to ensure JPasswordField is able to request focus when
 		// the dialog is first shown.
@@ -350,8 +361,9 @@ public class SwingDialogs {
 		
 	}
 	
-	private static JDialog createDialog() {
+	private static JDialog createDialog(String name) {
 		JDialog dialog = new JDialog();
+		dialog.setName(name);
 		dialog.setAlwaysOnTop(true);
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		return dialog;

@@ -58,7 +58,7 @@ public class SwingDialogs {
 	 * 			If {@code e} or {@code e.getMessage()} is {code null}, {@code %e%} will be replaced to {@code "null"}
 	 * @param waitTillClosed If {@code true}, this method will return after user closes the dialog.
 	 * */
-	public static void error(String title, String content, Exception e, boolean waitTillClosed) {
+	public static void error(String title, String content, Throwable e, boolean waitTillClosed) {
 
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		
@@ -115,7 +115,7 @@ public class SwingDialogs {
 	 * 			If {@code e} or {@code e.getMessage()} is {code null}, {@code %e%} will be replaced to {@code "null"}
 	 * @param waitTillClosed If {@code true}, this method will return after user closes the dialog.
 	 * */
-	public static void warning(String title, String content, Exception e, boolean waitTillClosed) {
+	public static void warning(String title, String content, Throwable e, boolean waitTillClosed) {
 
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		

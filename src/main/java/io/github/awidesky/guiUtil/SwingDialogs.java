@@ -41,6 +41,7 @@ public class SwingDialogs {
 
 
 	private static Logger logger = Logger.consoleLogger;
+	private volatile static boolean alwaysOnTop = true;
 
 	/**
 	 * Set Logger for all SwingDialog operation.
@@ -49,6 +50,22 @@ public class SwingDialogs {
 		logger = newLogger;
 	}
 	
+	/**
+	 * Return if the dialogs will always on top of other windows.
+	 * */
+	public static boolean isAlwaysOnTop() {
+		return alwaysOnTop;
+	}
+
+	/**
+	 * Global setting of whether the dialogs will always on top of other windows.
+	 * @param alwaysOnTop
+	 */
+	public static void setAlwaysOnTop(boolean alwaysOnTop) {
+		SwingDialogs.alwaysOnTop = alwaysOnTop;
+	}
+
+
 	/**
 	 * Show an error dialog.
 	 * String <code>"%e%"</code> in <code>content</code> will replaced by error message({@code Exception#getMessage()}) 
@@ -81,7 +98,7 @@ public class SwingDialogs {
 	 * */
 	private static void showErrorDialog(String title, String content) {
 
-		final JDialog dialog = createDialog("[SwingDialogs.error]");
+		final JDialog dialog = setDialog(new JDialog(), "[SwingDialogs.error]");
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -138,7 +155,7 @@ public class SwingDialogs {
 	 * */
 	private static void showWarningDialog(String title, String content) {
 		
-		final JDialog dialog = createDialog("[SwingDialogs.warning]");
+		final JDialog dialog = setDialog(new JDialog(), "[SwingDialogs.warning]");
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -188,7 +205,7 @@ public class SwingDialogs {
 	 * */
 	private static void showInfoDialog(String title, String content) {
 		
-		final JDialog dialog = createDialog("[SwingDialogs.info]");
+		final JDialog dialog = setDialog(new JDialog(), "[SwingDialogs.info]");
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -251,7 +268,7 @@ public class SwingDialogs {
 	}
 	
 	private static boolean showConfirmDialog(String title, String message) {
-		final JDialog dialog = createDialog("[SwingDialogs.confirm]");
+		final JDialog dialog = setDialog(new JDialog(), "[SwingDialogs.confirm]");
 		boolean result = JOptionPane.showConfirmDialog(dialog, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 		dialog.dispose();
 		logger.log("[SwingDialogs.confirm] response was : " + (result ? " Yes" : "No"));
@@ -286,7 +303,7 @@ public class SwingDialogs {
 	 * */
 	private static String showInputDialog(String title, String prompt, Object initialValue) {
 
-		final JDialog dialog = createDialog("[SwingDialogs.input]");
+		final JDialog dialog = setDialog(new JDialog(), "[SwingDialogs.input]");
 		
 		if (EventQueue.isDispatchThread()) {
 
@@ -332,8 +349,7 @@ public class SwingDialogs {
 		PasswordPanel pPnl = new PasswordPanel(prompt.replace("\n", System.lineSeparator()));
 		JOptionPane op = new JOptionPane(pPnl, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-		JDialog dlg = op.createDialog(title.replace("\n", System.lineSeparator()));
-		dlg.setName("[SwingDialogs.inputPassword]");
+		JDialog dlg = setDialog(op.createDialog(title.replace("\n", System.lineSeparator())), "[SwingDialogs.inputPassword]");
 
 		// Wire up FocusListener to ensure JPasswordField is able to request focus when
 		// the dialog is first shown.
@@ -370,10 +386,9 @@ public class SwingDialogs {
 		
 	}
 	
-	private static JDialog createDialog(String name) {
-		JDialog dialog = new JDialog();
+	private static JDialog setDialog(JDialog dialog, String name) {
 		dialog.setName(name);
-		dialog.setAlwaysOnTop(true);
+		dialog.setAlwaysOnTop(alwaysOnTop);
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		return dialog;
 	}

@@ -72,9 +72,9 @@ public interface Logger extends Closeable, AutoCloseable {
 	 * */
 	public void log(String data);
 	/**
-	 * Logs an <code>Exception</code> .
+	 * Logs an <code>Throwable</code> .
 	 * */
-	public void log(Exception e);
+	public void log(Throwable e);
 	/**
 	 * Logs an array of <code>Object</code>s.
 	 * */

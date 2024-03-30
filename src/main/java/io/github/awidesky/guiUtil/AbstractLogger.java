@@ -62,10 +62,10 @@ public abstract class AbstractLogger implements Logger {
 	}
 	
 	/**
-	 * Logs an <code>Exception</code>.
+	 * Logs an <code>Throwable</code>.
 	 * */
 	@Override
-	public void log(Exception e) {
+	public void log(Throwable e) {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		log(sw.toString());

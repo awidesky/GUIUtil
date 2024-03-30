@@ -74,11 +74,11 @@ public abstract class TaskLogger extends AbstractLogger {
 		return runLogTask(getLogTask(data));
 	}
 	/**
-	 * Try to log an Exception <i><b>right away</b></i>.
+	 * Try to log an Throwable <i><b>right away</b></i>.
 	 * 
 	 * @return <code>true</code> if succeed to log an Exception right away.
 	 * */
-	public boolean logNow(Exception e) {
+	public boolean logNow(Throwable e) {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		return logNow(sw.toString());

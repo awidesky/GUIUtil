@@ -56,14 +56,14 @@ public class SimpleLogger extends AbstractLogger {
 	 * Creates a logger with given {@code OutputStream} and {@code Charset}.
 	 * */
 	public SimpleLogger(OutputStream os, boolean autoFlush, Charset cs) {
-		this(new PrintWriter(new OutputStreamWriter(os, cs), autoFlush));
+		this(new OutputStreamWriter(os, cs), autoFlush);
 	}
 
 	/**
 	 * Creates a logger with given {@code Writer}.
 	 * */
-	public SimpleLogger(Writer wt) {
-		logTo = new PrintWriter(wt);
+	public SimpleLogger(Writer wt, boolean autoFlush) {
+		logTo = new PrintWriter(wt, autoFlush);
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class SimpleLogger extends AbstractLogger {
 	 * */
 	@Override
 	public void newLine() {
-		logTo.println(getPrefix());
+		logTo.println();
 	}
 
 

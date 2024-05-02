@@ -34,13 +34,13 @@ import javax.swing.SwingUtilities;
  * Each utility methods can called outside of {@code Event Dispatch Thread}, and whether wait for user to 
  * close the dialog or not can be set via {@code waitTillClosed} parameter in each methods.
  * 
- * <p>{@code SwingDialogs} has it's own {@code static Logger}, which is {@code Logger#consoleLogger} in default.
+ * <p>{@code SwingDialogs} has it's own {@code static Logger}, which is {@code Logger#nullLogger} in default.
  * It is changeable via {@code SwingDialogs#setLogger(AbstractLogger)}.
  * */
 public class SwingDialogs {
 
 
-	private static Logger logger = Logger.consoleLogger;
+	private static Logger logger = Logger.nullLogger;
 	private volatile static boolean alwaysOnTop = true;
 
 	/**
@@ -79,8 +79,8 @@ public class SwingDialogs {
 
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		
-		logger.log("[SwingDialogs.error] " + title + "\n\t" + co);
-		if(e != null) logger.log(e);
+		logger.error("[SwingDialogs.error] " + title + "\n\t" + co);
+		if(e != null) logger.error(e);
 		
 		if (waitTillClosed) {
 			showErrorDialog(title, co);
@@ -136,8 +136,8 @@ public class SwingDialogs {
 
 		String co = content.replace("%e%", (e == null || e.getMessage() == null) ? "null" : e.getMessage());
 		
-		logger.log("[SwingDialogs.warning] " + title + "\n\t" + co);
-		if(e != null) logger.log(e);
+		logger.warning("[SwingDialogs.warning] " + title + "\n\t" + co);
+		if(e != null) logger.warning(e);
 		
 		if (waitTillClosed) {
 			showWarningDialog(title, co);
@@ -187,7 +187,7 @@ public class SwingDialogs {
 	 * */
 	public static void information(String title, String content, boolean waitTillClosed) {
 		
-		logger.log("[SwingDialogs.info] " + title + "\n\t" + content);
+		logger.info("[SwingDialogs.info] " + title + "\n\t" + content);
 
 		if (waitTillClosed) {
 			showInfoDialog(title, content);
@@ -237,7 +237,7 @@ public class SwingDialogs {
 	 * */
 	public static boolean confirm(String title, String message) {
 
-		logger.log("[SwingDialogs.confirm] " + title + "\n\t" + message);
+		logger.info("[SwingDialogs.confirm] " + title + "\n\t" + message);
 
 		
 		if (EventQueue.isDispatchThread()) {
@@ -271,7 +271,7 @@ public class SwingDialogs {
 		final JDialog dialog = setDialog(new JDialog(), "[SwingDialogs.confirm]");
 		boolean result = JOptionPane.showConfirmDialog(dialog, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 		dialog.dispose();
-		logger.log("[SwingDialogs.confirm] response was : " + (result ? " Yes" : "No"));
+		logger.info("[SwingDialogs.confirm] response was : " + (result ? " Yes" : "No"));
 		return result;
 	}
 	
@@ -291,9 +291,9 @@ public class SwingDialogs {
 	 * @return User's answer. If user canceled, {@code null}.
 	 * */
 	public static String input(String title, String prompt, Object initialValue) {
-		logger.log("[SwingDialogs.input] " + title + "\n\t" + prompt);
+		logger.info("[SwingDialogs.input] " + title + "\n\t" + prompt);
 		String ret = showInputDialog(title, prompt, initialValue);
-		logger.log("[SwingDialogs.input] Input was : " + ret);
+		logger.info("[SwingDialogs.input] Input was : " + ret);
 		return ret;
 	}
 	
@@ -334,7 +334,7 @@ public class SwingDialogs {
 	 * @return Received password. If user canceled, {@code null}.
 	 * */
 	public static char[] inputPassword(String title, String prompt) {
-		logger.log("[SwingDialogs.inputPassword] " + title + "\n\t" + prompt);
+		logger.info("[SwingDialogs.inputPassword] " + title + "\n\t" + prompt);
 		return showInputPasswordDialog(title, prompt);
 	}
 	

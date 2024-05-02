@@ -14,6 +14,8 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+import io.github.awidesky.guiUtil.level.Level;
+
 /**
  * An abstract Logger class for one-consumer, multi-provider model that manages each logs as "task"
  * (whose type is {@code Consumer<PrintWriter>})
@@ -30,8 +32,8 @@ public abstract class TaskLogger extends AbstractLogger {
 	/**
 	 * Creates a task based logger.
 	 * */
-	public TaskLogger(boolean verbose, String prefix) {
-		this.verbose = verbose;
+	public TaskLogger(String prefix, Level level) {
+		setLogLevel(level);;
 		this.prefix = prefix;
 	}
 
@@ -57,14 +59,11 @@ public abstract class TaskLogger extends AbstractLogger {
 		});
 	}
 
-	/**
-	 * Logs a String.
-	 * */
 	@Override
-	public void log(String data) {
-		queueLogTask(getLogTask(data));
+	public void doLog(Level level, CharSequence str) {
+		queueLogTask(getLogTask("[" + level.name() + "] " + str));
 	}
-	
+
 	/**
 	 * Try to log a String <i><b>right away</b></i>.
 	 * 
@@ -95,7 +94,7 @@ public abstract class TaskLogger extends AbstractLogger {
 	/**
 	 * Prefix will printed only once even if the String is multiple line.
 	 * */
-	protected Consumer<PrintWriter> getLogTask(String data) {
+	protected Consumer<PrintWriter> getLogTask(CharSequence data) {
 		return (logTo) -> {
 			logTo.println(getPrefix() + data);
 		};

@@ -14,6 +14,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.function.Consumer;
 
+import io.github.awidesky.guiUtil.level.Level;
+
 /**
  * A <code>TaskLogger</code> that buffer all logs to <code>StringWriter</code> and does not actually prints it
  * before {@code TaskBufferedLogger#flush()} is called.
@@ -26,8 +28,8 @@ public abstract class TaskBufferedLogger extends TaskLogger implements Flushable
 	/**
 	 * Creates a task based buffered logger.
 	 * */
-	public TaskBufferedLogger(boolean verbose, String prefix) {
-		super(verbose, prefix);
+	public TaskBufferedLogger(String prefix, Level level) {
+		super(prefix, level);
 	}
 
 	/**
@@ -58,7 +60,7 @@ public abstract class TaskBufferedLogger extends TaskLogger implements Flushable
 	 * Logs a String.
 	 * */
 	@Override
-	public void log(String data) {
+	public void log(CharSequence data) {
 		buffer.append(data);
 		newLine();
 	}

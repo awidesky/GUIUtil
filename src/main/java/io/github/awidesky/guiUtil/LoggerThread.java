@@ -12,6 +12,7 @@ package io.github.awidesky.guiUtil;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
+
+import io.github.awidesky.guiUtil.level.Level;
+import io.github.awidesky.guiUtil.level.Leveled;
 
 
 /**
@@ -41,14 +45,14 @@ import java.util.function.Consumer;
  * <p>{@code LoggerThread} is not a Daemon Thread; since external output destination({@code OutputStream}) is not closed until
  * {@code LoggerThread#shutdown(int)} is called. {@code LoggerThread#shutdown(int)} must be called before the main application terminates.
  * */
-public class LoggerThread extends Thread {
+public class LoggerThread extends Thread implements Leveled {
 
 	private PrintWriter logTo = null;
 	private	LinkedBlockingQueue<Consumer<PrintWriter>> loggerQueue = new LinkedBlockingQueue<>();
 	private Set<TaskLogger> children = Collections.synchronizedSet(new HashSet<TaskLogger>());
 	
 	public volatile boolean isStop = false;
-	private boolean verbose = false;
+	private Level level = Level.getRootLogLevel();
 	private DateFormat datePrefix = null;
 	
 	/** Creates a new logger thread. */
@@ -85,35 +89,44 @@ public class LoggerThread extends Thread {
 		if(logTo != null) {
 			throw new IllegalArgumentException("log output stream is already set, cannot modify!");
 		}
-		logTo = new PrintWriter(new OutputStreamWriter(os, cs), autoFlush);
+		setLogDestination(new OutputStreamWriter(os, cs), autoFlush);
 	}
+	/**
+	 * Set destination of log to given {@code Writer}.
+	 * 
+	 * @param  autoFlush  A boolean; if true, the logs will flushed to the output buffer when printed.
+	 * */
+	public void setLogDestination(Writer wt, boolean autoFlush) {
+		logTo = new PrintWriter(wt, autoFlush);
+	}
+	
 	
 	/**
 	 * Returns a new {@code TaskLogger} with no initial prefix.
 	 * Returned {@code TaskLogger}'s verbosity is same as value of {@code LoggerThread#isVerbose()}
 	 * */
 	public TaskLogger getLogger() {
-		return getLogger(verbose, null);
+		return getLogger(null, level);
 	} 
 	/**
 	 * Returns a new {@code TaskLogger} with given prefix.
 	 * Returned {@code TaskLogger}'s verbosity is same as value of {@code LoggerThread#isVerbose()}
 	 * */
 	public TaskLogger getLogger(String prefix) {
-		return getLogger(verbose, prefix);
+		return getLogger(prefix, level);
 	}
 	/**
 	 * Returns a new {@code TaskLogger} with given prefix and verbosity.
 	 * */
-	public TaskLogger getLogger(boolean verbose, String prefix) {
-		TaskLogger newLogger = new TaskLogger(verbose, prefix) {
+	public TaskLogger getLogger(String prefix, Level level) {
+		TaskLogger newLogger = new TaskLogger(prefix, level) {
 
 			@Override
 			public void queueLogTask(Consumer<PrintWriter> logTask) {
 				try {
 					loggerQueue.put(logTask);
 				} catch (InterruptedException e) {
-					if (!isStop) log(e);
+					if (!isStop) error(e);
 				}
 			}
 
@@ -138,20 +151,20 @@ public class LoggerThread extends Thread {
 	 * Returned {@code TaskBufferedLogger}'s verbosity is same as value of {@code LoggerThread#isVerbose()}
 	 * */
 	public TaskBufferedLogger getBufferedLogger() {
-		return getBufferedLogger(verbose, null);
+		return getBufferedLogger(null, level);
 	} 
 	/**
 	 * Returns a new {@code TaskBufferedLogger} with given prefix.
 	 * Returned {@code TaskBufferedLogger}'s verbosity is same as value of {@code LoggerThread#isVerbose()}
 	 * */
 	public TaskBufferedLogger getBufferedLogger(String prefix) {
-		return getBufferedLogger(verbose, prefix);
+		return getBufferedLogger(prefix, level);
 	}
 	/**
 	 * Returns a new {@code TaskBufferedLogger} with given prefix and verbosity.
 	 * */
-	public TaskBufferedLogger getBufferedLogger(boolean verbose, String prefix) {
-		TaskBufferedLogger newLogger = new TaskBufferedLogger(verbose, prefix) {
+	public TaskBufferedLogger getBufferedLogger(String prefix, Level level) {
+		TaskBufferedLogger newLogger = new TaskBufferedLogger(prefix, level) {
 
 			@Override
 			public void queueLogTask(Consumer<PrintWriter> logTask) {
@@ -159,7 +172,7 @@ public class LoggerThread extends Thread {
 					loggerQueue.put(logTask);
 				} catch (InterruptedException e) {
 					loggerQueue.offer(logTask);
-					if (!isStop) log(e);
+					if (!isStop) error(e);
 				}
 			}
 
@@ -200,29 +213,89 @@ public class LoggerThread extends Thread {
 	}
 	
 	/**
-	 * Set verbosity of this {@code LoggerThread}.
-	 * Verbosity of child {@code TaskLogger} generated after this call will set to {@code verbose}.
-	 * Children {@code TaskLogger}s who created previously is not effected.
-	 * */
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
+	 * @return true if the child {@code TaskLogger} to be generated
+	 * 			will be enabled for the INFO level.
+	 */
+	@Override
+	public boolean isInfoEnabled() {
+		return level.compareTo(Level.INFO) >= 0;
 	}
+
 	/**
-	 * Set verbosity of this {@code LoggerThread} and all existing children {@code TaskLogger}s.
-	 * Verbosity of child {@code TaskLogger} generated after this call will set to {@code verbose}.
-	 * Children {@code TaskLogger}s who created previously is also effected.
-	 * */
-	public void setVerboseAllChildren(boolean verbose) {
-		this.verbose = verbose;
-		children.stream().forEach(l -> l.setVerbose(verbose));
+	 * @return true if the child {@code TaskLogger} to be generated
+	 * 			will be enabled for the DEBUG level.
+	 */
+	@Override
+	public boolean isDebugEnabled() {
+		return level.compareTo(Level.DEBUG) >= 0;
 	}
+
 	/**
-	 * Get verbosity of this {@code LoggerThread}.
-	 * It means verbosity of child {@code TaskLogger} generated in this point will have.
-	 * */
-	public boolean isVerbose() {
-		return verbose;
+	 * @return true if the child {@code TaskLogger} to be generated
+	 * 			will be enabled for the TRACE level.
+	 */
+	@Override
+	public boolean isTraceEnabled() {
+		return level.compareTo(Level.TRACE) >= 0;
 	}
+
+	/**
+	 * @return true if the child {@code TaskLogger} to be generated
+	 * 			will be enabled for the WARNING level.
+	 */
+	@Override
+	public boolean isWarningEnabled() {
+		return level.compareTo(Level.WARNING) >= 0;
+	}
+
+	/**
+	 * @return true if the child {@code TaskLogger} to be generated
+	 * 			will be enabled for the ERROR level.
+	 */
+	@Override
+	public boolean isErrorEnabled() {
+		return level.compareTo(Level.ERROR) >= 0;
+	}
+
+	/**
+	 * @return true if the child {@code TaskLogger} to be generated
+	 * 			will be enabled for the FATAL level.
+	 */
+	@Override
+	public boolean isFatalEnabled() {
+		return level.compareTo(Level.FATAL) >= 0;
+	}
+	
+	/**
+	 * Set global log level of this {@code LoggerThread}.
+	 * Log level of child {@code TaskLogger}s generated after this call will set to {@code level}.
+	 * Children {@code TaskLogger}s who created previously are not effected.
+	 * */
+	@Override
+	public void setLogLevel(Level newLevels) {
+		this.level = newLevels;
+	}
+	
+	/**
+	 * Get global log level of this {@code LoggerThread}.
+	 * Log level of child {@code TaskLogger}s generated will set to returning {@code level}.
+	 * */
+	@Override
+	public Level getLogLevel() {
+		return level;
+	}
+	
+	
+	/**
+	 * Set global log level of this {@code LoggerThread} and all existing children {@code TaskLogger}s.
+	 * Log level of child {@code TaskLogger}s generated after this call will set to {@code level}.
+	 * Children {@code TaskLogger}s who created previously are also changed to new level.
+	 * */
+	public void setLogLevelAllChildren(Level newLevel) {
+		setLogLevel(newLevel);
+		children.stream().forEach(l -> l.setLogLevel(newLevel));
+	}
+	
 	/**
 	 * Set date prefix of this {@code LoggerThread}.
 	 * date prefix of child {@code TaskLogger} generated after this call will set to {@code datePrefix}.
@@ -233,8 +306,8 @@ public class LoggerThread extends Thread {
 	}
 	/**
 	 * Set date prefix of this {@code LoggerThread} and all existing children {@code TaskLogger}s.
-	 * date prefix of child {@code TaskLogger} generated after this call will set to {@code datePrefix}.
-	 * Children {@code TaskLogger}s who created previously is also effected.
+	 * date prefix of child {@code TaskLogger}s generated after this call will set to {@code datePrefix}.
+	 * Children {@code TaskLogger}s who created previously are also changed to new date format.
 	 * */
 	public void setDatePrefixAllChildren(DateFormat datePrefix) {
 		this.datePrefix = datePrefix;

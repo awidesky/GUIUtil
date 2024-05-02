@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
+
+import io.github.awidesky.guiUtil.level.Level;
 
 /**
  * A Simple Logger class that prints log to given {@code OutputStream}.
@@ -42,7 +45,7 @@ public class SimpleLogger extends AbstractLogger {
 	}
 	
 	/**
-	 * Creates a logger.
+	 * Creates a logger with given {@code OutputStream}.
 	 * Logged {@code String}s are encoded with {@code Charset#defaultCharset()}
 	 * */
 	public SimpleLogger(OutputStream os, boolean autoFlush) {
@@ -50,27 +53,27 @@ public class SimpleLogger extends AbstractLogger {
 	}
 	
 	/**
-	 * Creates a logger.
+	 * Creates a logger with given {@code OutputStream} and {@code Charset}.
 	 * */
 	public SimpleLogger(OutputStream os, boolean autoFlush, Charset cs) {
-		logTo = new PrintWriter(new OutputStreamWriter(os, cs), autoFlush);
+		this(new PrintWriter(new OutputStreamWriter(os, cs), autoFlush));
 	}
 
+	/**
+	 * Creates a logger with given {@code Writer}.
+	 * */
+	public SimpleLogger(Writer wt) {
+		logTo = new PrintWriter(wt);
+	}
+	
 	/**
 	 * Logs an empty new line without prefix
 	 * */
 	@Override
 	public void newLine() {
-		logTo.println();
+		logTo.println(getPrefix());
 	}
 
-	/**
-	 * Logs a String with prefix.
-	 * */
-	@Override
-	public void log(String data) {
-		logTo.println(getPrefix() + data);
-	}
 
 	/**
 	 * Close the Logger and associated resource.
@@ -79,6 +82,12 @@ public class SimpleLogger extends AbstractLogger {
 	public void close() throws IOException {
 		logTo.flush();
 		logTo.close();
+	}
+
+
+	@Override
+	public void doLog(Level level, CharSequence str) {
+		logTo.println(getPrefix() + "[" + level.name() + "] " + str);
 	}
 
 }

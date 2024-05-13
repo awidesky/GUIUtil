@@ -79,8 +79,4 @@ class LogLevelTest {
 		}
 	}
 
-	
-	void levelPrefixTest() {
-		//TODO
-	}
 }

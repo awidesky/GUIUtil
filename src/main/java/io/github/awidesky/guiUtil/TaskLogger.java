@@ -10,8 +10,6 @@
 package io.github.awidesky.guiUtil;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 import io.github.awidesky.guiUtil.level.Level;
@@ -42,13 +40,7 @@ public abstract class TaskLogger extends AbstractLogger {
 	 * Implementation may queue given <code>logTask</code> to a worker thread. 
 	 * */
 	protected abstract void queueLogTask(Consumer<PrintWriter> logTask);
-	/**
-	 * Try to run a log task <i><b>right away</b></i>.
-	 * 
-	 * @return <code>true</code> if succeed to run the <code>logTask</code> right away
-	 * */
-	protected abstract boolean runLogTask(Consumer<PrintWriter> logTask);
-	
+
 	/**
 	 * Logs a empty line without any prefix.
 	 * */
@@ -64,33 +56,6 @@ public abstract class TaskLogger extends AbstractLogger {
 		queueLogTask(getLogTask(level, str));
 	}
 
-	/**
-	 * Try to log a String <i><b>right away</b></i>.
-	 * 
-	 * @return <code>true</code> if succeed to log a String right away.
-	 * */
-	public boolean logNow(Level level, String data) {//TODO : remove?
-		return runLogTask(getLogTask(level, data));
-	}
-	/**
-	 * Try to log an Throwable <i><b>right away</b></i>.
-	 * 
-	 * @return <code>true</code> if succeed to log an Exception right away.
-	 * */
-	public boolean logNow(Throwable e) {
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		return logNow(sw.toString());
-	}
-	/**
-	 * Try to log Objects(by calling {@code Object#toString()}) <i><b>right away</b></i>.
-	 * 
-	 * @return <code>true</code> if succeed to log all Objects right away.
-	 * */
-	public boolean logNow(Object... objs) {
-		return Arrays.stream(objs).map(Object::toString).allMatch(this::logNow);
-	}
-	
 	/**
 	 * Prefix will printed only once even if the String is multiple line.
 	 * */

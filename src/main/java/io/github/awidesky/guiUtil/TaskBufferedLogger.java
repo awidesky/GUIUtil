@@ -10,9 +10,7 @@
 package io.github.awidesky.guiUtil;
 
 import java.io.Flushable;
-import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.function.Consumer;
 
 import io.github.awidesky.guiUtil.level.Level;
 
@@ -30,22 +28,6 @@ public abstract class TaskBufferedLogger extends TaskLogger implements Flushable
 	 * */
 	public TaskBufferedLogger(String prefix, Level level) {
 		super(prefix, level);
-	}
-
-	/**
-	 * A <code>TaskBufferedLogger</code> does not support immediate logging.
-	 * */
-	@Override
-	protected final boolean runLogTask(Consumer<PrintWriter> logTask) {
-		throw new UnsupportedOperationException("TaskBufferedLogger supports buffered operation only!");
-	}
-	
-	/**
-	 * A <code>TaskBufferedLogger</code> does not support immediate logging.
-	 * */
-	@Override
-	public boolean logNow(Level level, String data) {
-		throw new UnsupportedOperationException("TaskBufferedLogger supports buffered operation only!");
 	}
 
 	/**

@@ -131,11 +131,6 @@ public class LoggerThread extends Thread implements Leveled {
 			}
 
 			@Override
-			public boolean runLogTask(Consumer<PrintWriter> logTask) {
-				return loggerQueue.offer(logTask);
-			}
-
-			@Override
 			public void close() {
 				children.remove(this);
 			}

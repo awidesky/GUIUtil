@@ -10,20 +10,28 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.github.awidesky.guiUtil.level.Level;
 
-class LogTest {
+class LogLevelTest {
 	
 	private static SimpleLogger debugLogger = new SimpleLogger(System.out);
 	static {
 		debugLogger.setPrefix("[JUnit test debug output]");
 		debugLogger.setLogLevel(Level.DEBUG); // delete this line or set higher level to omit test logs
 	}
+	
+	@BeforeAll
+	@AfterAll
+	static void log_guard() {
+		System.out.println("==========================LogLevelTest==========================");
+	}
 
 	@Test
-	void testLevel() {
+	void test() {
 		Arrays.stream(Level.values())
 			.forEach(eachLevel -> {
 				StringWriter sw = new StringWriter();
@@ -71,4 +79,8 @@ class LogTest {
 		}
 	}
 
+	
+	void levelPrefixTest() {
+		//TODO
+	}
 }

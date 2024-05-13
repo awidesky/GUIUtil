@@ -60,7 +60,7 @@ public abstract class AbstractLogger implements Logger {
 	
 	/**
 	 * Generates prefix String(date prefix + additional prefix)
-	 * @param level TODO
+	 * @param level
 	 * */
 	protected String getPrefix(Level level) {
 		StringBuilder sb = new StringBuilder("");

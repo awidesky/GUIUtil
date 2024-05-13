@@ -53,7 +53,7 @@ public abstract class TaskLogger extends AbstractLogger {
 	 * Logs a empty line without any prefix.
 	 * */
 	@Override
-	public void newLine() { //TODO : Prefix?
+	public void newLine() {
 		queueLogTask((logTo) -> {
 			logTo.println();
 		});

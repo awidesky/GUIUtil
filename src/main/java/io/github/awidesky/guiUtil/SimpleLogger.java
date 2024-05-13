@@ -86,8 +86,8 @@ public class SimpleLogger extends AbstractLogger {
 
 
 	@Override
-	public void doLog(Level level, CharSequence str) {
-		logTo.println(getPrefix() + "[" + level.name() + "] " + str);
+	public void writeString(Level level, CharSequence str) {
+		logTo.println(getPrefix(level) + str);
 	}
 
 }

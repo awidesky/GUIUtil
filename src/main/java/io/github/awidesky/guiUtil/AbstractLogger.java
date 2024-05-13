@@ -28,6 +28,7 @@ public abstract class AbstractLogger implements Logger {
 
 	protected DateFormat datePrefix = null;
 	protected String prefix = null;
+	protected boolean printLogLevel = true;
 	protected Level level = Level.getRootLogLevel();
 	
 	/**
@@ -52,11 +53,18 @@ public abstract class AbstractLogger implements Logger {
 		this.prefix = prefix;
 	}
 	
+	@Override
+	public void setPrintLogLevel(boolean flag) {
+		this.printLogLevel = flag;
+	}
+	
 	/**
 	 * Generates prefix String(date prefix + additional prefix)
+	 * @param level TODO
 	 * */
-	protected String getPrefix() {
+	protected String getPrefix(Level level) {
 		StringBuilder sb = new StringBuilder("");
+		if(printLogLevel) sb.append("[" + level.name() + "] ");
 		if(datePrefix != null) sb.append(datePrefix.format(new Date()));
 		if(prefix != null) sb.append(prefix);
 		return sb.toString();
@@ -316,7 +324,7 @@ public abstract class AbstractLogger implements Logger {
 
 	@Override
 	public void logInLevel(Level level, CharSequence str) {
-		if(this.level.includes(level)) doLog(level, str);
+		if(this.level.includes(level)) writeString(level, str);
 	}
 	
 	@Override
@@ -329,7 +337,7 @@ public abstract class AbstractLogger implements Logger {
 		return level;
 	}
 	
-	protected abstract void doLog(Level level, CharSequence str);
+	protected abstract void writeString(Level level, CharSequence str);
 
 	
 	@Override

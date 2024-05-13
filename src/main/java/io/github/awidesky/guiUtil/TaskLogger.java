@@ -53,15 +53,15 @@ public abstract class TaskLogger extends AbstractLogger {
 	 * Logs a empty line without any prefix.
 	 * */
 	@Override
-	public void newLine() {
+	public void newLine() { //TODO : Prefix?
 		queueLogTask((logTo) -> {
 			logTo.println();
 		});
 	}
 
 	@Override
-	public void doLog(Level level, CharSequence str) {
-		queueLogTask(getLogTask("[" + level.name() + "] " + str));
+	public void writeString(Level level, CharSequence str) {
+		queueLogTask(getLogTask(level, str));
 	}
 
 	/**
@@ -69,8 +69,8 @@ public abstract class TaskLogger extends AbstractLogger {
 	 * 
 	 * @return <code>true</code> if succeed to log a String right away.
 	 * */
-	public boolean logNow(String data) {
-		return runLogTask(getLogTask(data));
+	public boolean logNow(Level level, String data) {//TODO : remove?
+		return runLogTask(getLogTask(level, data));
 	}
 	/**
 	 * Try to log an Throwable <i><b>right away</b></i>.
@@ -94,9 +94,9 @@ public abstract class TaskLogger extends AbstractLogger {
 	/**
 	 * Prefix will printed only once even if the String is multiple line.
 	 * */
-	protected Consumer<PrintWriter> getLogTask(CharSequence data) {
+	protected Consumer<PrintWriter> getLogTask(Level level, CharSequence data) {
 		return (logTo) -> {
-			logTo.println(getPrefix() + data);
+			logTo.println(getPrefix(level) + data);
 		};
 	}
 	

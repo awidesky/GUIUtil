@@ -31,7 +31,7 @@ public interface Logger extends Leveled, Closeable, AutoCloseable {
 	public static final Logger nullLogger = new AbstractLogger() {
 		@Override public void newLine() {}
 		@Override public void close() {}
-		@Override public void doLog(Level level, CharSequence str) {}
+		@Override public void writeString(Level level, CharSequence str) {}
 	}; 
 
 	
@@ -50,6 +50,13 @@ public interface Logger extends Leveled, Closeable, AutoCloseable {
 	 * @see Logger#setDatePrefix(DateFormat)
 	 * */
 	public void setPrefix(String prefix);
+	
+	/**
+	 * If parameter is true, level of each log will be printed as prefix.
+	 * 
+	 * @param flag
+	 */
+	public void setPrintLogLevel(boolean flag);
 	
 	/**
 	 * Print a new line without printing any prefixes, regardless of level.

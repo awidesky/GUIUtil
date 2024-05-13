@@ -44,7 +44,7 @@ public abstract class TaskBufferedLogger extends TaskLogger implements Flushable
 	 * A <code>TaskBufferedLogger</code> does not support immediate logging.
 	 * */
 	@Override
-	public boolean logNow(String data) {
+	public boolean logNow(Level level, String data) {
 		throw new UnsupportedOperationException("TaskBufferedLogger supports buffered operation only!");
 	}
 
@@ -60,8 +60,8 @@ public abstract class TaskBufferedLogger extends TaskLogger implements Flushable
 	 * Logs a String.
 	 * */
 	@Override
-	public void log(CharSequence data) {
-		buffer.append(data);
+	public void writeString(Level level, CharSequence data) {
+		buffer.append(getPrefix(level) + data);
 		newLine();
 	}
 	
@@ -70,7 +70,13 @@ public abstract class TaskBufferedLogger extends TaskLogger implements Flushable
 	 * */
 	@Override
 	public void flush() {
-		queueLogTask(getLogTask(buffer.toString()));
+		if(buffer.getBuffer().length() != 0) {
+			String str = buffer.toString();
+			buffer.getBuffer().setLength(0);
+			queueLogTask((logTo) -> {
+				logTo.print(str);
+			});
+		}
 	}
 
 }

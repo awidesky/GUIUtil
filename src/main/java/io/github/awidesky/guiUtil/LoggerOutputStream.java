@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
@@ -139,9 +138,5 @@ public class LoggerOutputStream extends OutputStream implements Flushable {
 		}
     }
     
-    public PrintStream toPrintStream(boolean autoFlush) {
-    	return new PrintStream(this, autoFlush, charset);
-    }
-    //TODO : toString 구현하
 }
 

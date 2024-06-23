@@ -9,6 +9,7 @@
 
 package io.github.awidesky.guiUtil;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
@@ -341,8 +342,8 @@ public abstract class AbstractLogger implements Logger {
 	protected abstract void writeString(Level level, CharSequence str);
 
 	@Override
-	public LoggerOutputStream toOutputStream(Level level, Charset charset) {
-		return new LoggerOutputStream(this, level == null ? this.level : level, charset);
+	public PrintStream toPrintStream(Level level, boolean autoFlush, Charset charset) {
+		return new PrintStream(new LoggerOutputStream(this, level == null ? this.level : level, charset), autoFlush, charset);
 	}
 	
 	@Override

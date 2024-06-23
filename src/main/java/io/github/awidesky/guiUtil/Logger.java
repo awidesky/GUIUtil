@@ -10,6 +10,7 @@
 package io.github.awidesky.guiUtil;
 
 import java.io.Closeable;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 
@@ -229,5 +230,5 @@ public interface Logger extends Leveled, Closeable, AutoCloseable {
 	 * @param charset byte data written in returned Stream will encoded to given charset. 
 	 * @return
 	 */
-	public LoggerOutputStream toOutputStream(Level level, Charset charset);
+	public PrintStream toPrintStream(Level level, boolean autoFlush, Charset charset);
 }

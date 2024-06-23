@@ -10,6 +10,7 @@
 package io.github.awidesky.guiUtil;
 
 import java.io.Closeable;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 
 import io.github.awidesky.guiUtil.level.Level;
@@ -220,4 +221,13 @@ public interface Logger extends Leveled, Closeable, AutoCloseable {
 	 */
 	public void logInLevel(Level level, CharSequence str);
 
+	/***
+	 * 
+	 * All String written to returned Stream will logged as given level.
+	 * @param level Every data written will logged in given level. It {@code null},
+	 * 				current level of the {@code Logger} will used
+	 * @param charset byte data written in returned Stream will encoded to given charset. 
+	 * @return
+	 */
+	public LoggerOutputStream toOutputStream(Level level, Charset charset);
 }

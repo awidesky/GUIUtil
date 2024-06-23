@@ -11,6 +11,7 @@ package io.github.awidesky.guiUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -64,7 +65,7 @@ public abstract class AbstractLogger implements Logger {
 	 * */
 	protected String getPrefix(Level level) {
 		StringBuilder sb = new StringBuilder("");
-		if(printLogLevel) sb.append("[" + level.name() + "] ");
+		if(printLogLevel) sb.append(level.getPrefixText());
 		if(datePrefix != null) sb.append(datePrefix.format(new Date()));
 		if(prefix != null) sb.append(prefix);
 		return sb.toString();
@@ -339,6 +340,10 @@ public abstract class AbstractLogger implements Logger {
 	
 	protected abstract void writeString(Level level, CharSequence str);
 
+	@Override
+	public LoggerOutputStream toOutputStream(Level level, Charset charset) {
+		return new LoggerOutputStream(this, level == null ? this.level : level, charset);
+	}
 	
 	@Override
 	public String toString() {

@@ -3,7 +3,6 @@ package io.github.awidesky.guiUtil;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -34,8 +33,8 @@ class LogLevelTest {
 	void test() {
 		Arrays.stream(Level.values())
 			.forEach(eachLevel -> {
-				StringWriter sw = new StringWriter();
-				levelIterateTest(eachLevel, new SimpleLogger(sw, true), sw::toString);
+				StringLogger sl = new StringLogger(true);
+				levelIterateTest(eachLevel, sl, sl::getString);
 			});
 	}
 

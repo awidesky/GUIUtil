@@ -5,6 +5,9 @@ import java.io.StringWriter;
 /**
  * Logs in a {@code StringWriter}, so that every log output can be collected into a buffer.
  * {@code StringLogger#getString()} will return the logged data as {@code String}.
+ * <br>
+ * Field {@code printLogLevel} is set to {@code false} initially, since {@code StringLogger} 
+ * is normally used to gobble output, like {@code java.io.StringWriter}.
  */
 public class StringLogger extends SimpleLogger {
 
@@ -26,6 +29,7 @@ public class StringLogger extends SimpleLogger {
 	private StringLogger(StringWriter s, boolean autoFlush) {
 		super(s, true);
 		sw = s;
+		setPrintLogLevel(false);
 	}
 	
 	/**

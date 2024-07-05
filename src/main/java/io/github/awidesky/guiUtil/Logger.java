@@ -24,7 +24,7 @@ import io.github.awidesky.guiUtil.level.Leveled;
  * 
  * @author Eugene Hong
  * */
-public interface Logger extends Leveled, Closeable, AutoCloseable {
+public interface Logger extends Leveled, Closeable {
 
 
 	/**

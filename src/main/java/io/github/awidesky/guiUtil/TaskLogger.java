@@ -65,7 +65,10 @@ public abstract class TaskLogger extends AbstractLogger {
 		};
 	}
 	
-	/** Close the logger. */
+	/**
+	 * Closes this logger and releases any system resources associated with it.
+	 * If the logger is already closed then invoking this method has no effect.
+	 */
 	@Override
 	public abstract void close();
 }

@@ -9,6 +9,7 @@
 
 package io.github.awidesky.guiUtil;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -33,26 +34,16 @@ public abstract class AbstractLogger implements Logger {
 	protected boolean printLogLevel = true;
 	protected Level level = Level.getRootLogLevel();
 	
-	/**
-	 * Set date information prefix for this <code>Logger</code> instance.
-	 * if argument is <code>null</code>, no date information prefix is appended.
-	 * Date prefix is always appended very first of the line.
-	 * */
 	@Override
-	public void setDatePrefix(DateFormat datePrefix) {
+	public Logger setDatePrefix(DateFormat datePrefix) {
 		this.datePrefix = datePrefix;
+		return this;
 	}
 
-	/**
-	 * Set additional prefix for this <code>Logger</code> instance.
-	 * if argument is <code>null</code>, no additional prefix is appended.
-	 * The additional prefix is always appended after date prefix(if exists).
-	 * 
-	 * @see Logger#setDatePrefix(DateFormat)
-	 * */
 	@Override
-	public void setPrefix(String prefix) {
+	public Logger setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 	
 	@Override
@@ -340,6 +331,40 @@ public abstract class AbstractLogger implements Logger {
 	}
 	
 	protected abstract void writeString(Level level, CharSequence str);
+	
+	/**
+	 * Generate a child logger that adds additional prefix.
+	 * Returned logger is just a proxy logger that writes all output to its parent ({@code this}).
+	 * with additional prefix.
+	 * 
+	 * @param morePrefix additional prefix that'll appended in output.
+	 * @param closeChildIfParentClosed if {@code true}, the returned child logger will closed
+	 * 									if the parent({@code this}) is closed.
+	 * 
+	 * @return new child logger with additional prefix
+	 */
+	public Logger withMorePrefix(String morePrefix, boolean closeChildIfParentClosed) {
+		return new AbstractLogger() {
+			
+			private final AbstractLogger parent = this;
+			private final String addedPrefix = morePrefix;
+			
+			@Override
+			public void close() throws IOException {
+				if(closeChildIfParentClosed) parent.close();
+			}
+			
+			@Override
+			public void newLine() {
+				parent.newLine();
+			}
+			
+			@Override
+			protected void writeString(Level level, CharSequence str) {
+				parent.writeString(level, addedPrefix + str);
+			}
+		};
+	}
 
 	@Override
 	public PrintStream toPrintStream(Level level, boolean autoFlush, Charset charset) {

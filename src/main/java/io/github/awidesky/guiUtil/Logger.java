@@ -39,19 +39,23 @@ public interface Logger extends Leveled, Closeable {
 	
 	/**
 	 * Set date information prefix for this {@code Logger} instance.
-	 * if argument is <code>null</code>, no date information prefix is appended.
+	 * if argument is {@code null}, no date information prefix is appended.
 	 * Date prefix is always appended very first of the line.
+	 * 
+	 * @return this logger
 	 * */
-	public void setDatePrefix(DateFormat datePrefix);
+	public Logger setDatePrefix(DateFormat datePrefix);
 
 	/**
 	 * Set additional prefix for this {@code Logger} instance.
-	 * if argument is <code>null</code>, no additional prefix is appended.
+	 * if argument is {@code null}, no additional prefix is appended.
 	 * The additional prefix is always appended after date prefix(if exists).
+	 * 
+	 * @return this logger
 	 * 
 	 * @see Logger#setDatePrefix(DateFormat)
 	 * */
-	public void setPrefix(String prefix);
+	public Logger setPrefix(String prefix);
 	
 	/**
 	 * If parameter is true, level of each log will be printed as prefix.

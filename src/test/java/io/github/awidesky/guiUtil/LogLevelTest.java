@@ -59,8 +59,7 @@ class LogLevelTest {
 		Arrays.stream(Level.values()).forEach(le -> logger.logInLevel(le, le.name()));
 
 		String output = logGobbler.get();
-		Stream<String> outputStream = output.lines().map(str -> str.split(" ")[1]);
-		String nonmatch = outputStream.map(Level::valueOf).filter(l -> !eachLevel.includes(l)).map(Level::name).collect(Collectors.joining(", "));
+		String nonmatch = output.lines().map(Level::valueOf).filter(l -> !eachLevel.includes(l)).map(Level::name).collect(Collectors.joining(", "));
 
 		debugLogger.debug("Level Iterate Test for " + logger.toString());
 		output.lines().forEach(debugLogger::debug);

@@ -332,17 +332,8 @@ public abstract class AbstractLogger implements Logger {
 	
 	protected abstract void writeString(Level level, CharSequence str);
 	
-	/**
-	 * Generate a child logger that adds additional prefix.
-	 * Returned logger is just a proxy logger that writes all output to its parent ({@code this}).
-	 * with additional prefix.
-	 * 
-	 * @param morePrefix additional prefix that'll appended in output.
-	 * @param closeChildIfParentClosed if {@code true}, the returned child logger will closed
-	 * 									if the parent({@code this}) is closed.
-	 * 
-	 * @return new child logger with additional prefix
-	 */
+	
+	@Override
 	public Logger withMorePrefix(String morePrefix, boolean closeChildIfParentClosed) {
 		return new AbstractLogger() {
 			

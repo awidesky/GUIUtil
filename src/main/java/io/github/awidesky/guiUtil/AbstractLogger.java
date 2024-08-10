@@ -334,15 +334,14 @@ public abstract class AbstractLogger implements Logger {
 	
 	
 	@Override
-	public Logger withMorePrefix(String morePrefix, boolean closeChildIfParentClosed) {
+	public Logger withMorePrefix(String morePrefix, boolean closeParentIfChildClosed) {
+		final AbstractLogger parent = this;
 		return new AbstractLogger() {
-			
-			private final AbstractLogger parent = this;
 			private final String addedPrefix = morePrefix;
 			
 			@Override
 			public void close() throws IOException {
-				if(closeChildIfParentClosed) parent.close();
+				if(closeParentIfChildClosed) parent.close();
 			}
 			
 			@Override

@@ -242,10 +242,10 @@ public interface Logger extends Leveled, Closeable {
 	 * with additional prefix.
 	 * 
 	 * @param morePrefix additional prefix that'll appended in output.
-	 * @param closeChildIfParentClosed if {@code true}, the returned child logger will closed
-	 * 									if the parent({@code this}) is closed.
+	 * @param closeParentIfChildClosed if {@code true}, the parent({@code this}) will closed
+	 * 									if the returned child logger is closed.
 	 * 
 	 * @return new child logger with additional prefix
 	 */
-	public Logger withMorePrefix(String morePrefix, boolean closeChildIfParentClosed);
+	public Logger withMorePrefix(String morePrefix, boolean closeParentIfChildClosed);
 }

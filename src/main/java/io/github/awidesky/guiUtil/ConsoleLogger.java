@@ -22,6 +22,8 @@ public class ConsoleLogger extends SimpleLogger {
 	 * Do noting because we shouldn't close {@code System.out}.
 	 */
 	@Override
-	public void close() {}
+	public void close() {
+		System.out.flush();
+	}
 
 }

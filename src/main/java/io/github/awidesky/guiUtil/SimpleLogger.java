@@ -25,6 +25,7 @@ import io.github.awidesky.guiUtil.level.Level;
 public class SimpleLogger extends AbstractLogger {
 	
 	private PrintWriter logTo;
+	private boolean close = true;
 	
 	/**
 	 * Creates a logger with given {@code OutputStream}.
@@ -56,6 +57,7 @@ public class SimpleLogger extends AbstractLogger {
 	 * */
 	public SimpleLogger(OutputStream os, boolean autoFlush, Charset cs) {
 		this(new OutputStreamWriter(os, cs), autoFlush);
+		close = !(os == System.out || os == System.err); 
 	}
 
 	/**
@@ -81,7 +83,7 @@ public class SimpleLogger extends AbstractLogger {
 	@Override
 	public void close() {
 		logTo.flush();
-		logTo.close();
+		if(close) logTo.close();
 	}
 
 

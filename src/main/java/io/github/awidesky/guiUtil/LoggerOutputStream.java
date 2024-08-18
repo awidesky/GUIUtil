@@ -19,7 +19,7 @@ import io.github.awidesky.guiUtil.level.Level;
  * Heavily inspired by 
  * <a href="https://github.com/apache/logging-log4j2/blob/2.x/log4j-iostreams/src/main/java/org/apache/logging/log4j/io/LoggerOutputStream.java">log4j</a>
  */
-public class LoggerOutputStream extends OutputStream implements Flushable {
+public class LoggerOutputStream extends OutputStream {
 
     private static final int BUFFER_SIZE = 1024;
     private final Logger logger;
@@ -28,14 +28,20 @@ public class LoggerOutputStream extends OutputStream implements Flushable {
     private final char[] msgBuf = new char[BUFFER_SIZE];
     private final StringBuilder msg = new StringBuilder();
     private boolean closed;
-    private final Charset charset;
+    private boolean closeExternalLogger;
+	private final Charset charset;
 
     private final ByteBuffer buf = ByteBuffer.allocate(BUFFER_SIZE);
 
 
     public LoggerOutputStream(Logger logger, Level level, Charset charset) {
+    	this(logger, level, charset, true);
+    }
+    public LoggerOutputStream(Logger logger, Level level, Charset charset, boolean closeExternalLogger) {
         this.logger = logger;
         this.level = level == null ? logger.getLogLevel() : level;
+        this.closed = false;
+        this.closeExternalLogger = closeExternalLogger;
         this.charset = charset == null ? Charset.defaultCharset() : charset;
 		this.reader = new InputStreamReader(new InputStream() {
 			@Override
@@ -63,11 +69,12 @@ public class LoggerOutputStream extends OutputStream implements Flushable {
 		}, this.charset);
 	}
 
+    @Override
     public void close() throws IOException {
         synchronized (msg) {
             closed = true;
             if (msg.length() > 0) log();
-            logger.close();
+            if(closeExternalLogger) logger.close();
         }
     }
 
@@ -137,6 +144,10 @@ public class LoggerOutputStream extends OutputStream implements Flushable {
 			extractMessages();
 		}
     }
-    
+
+    public void setCloseExternalLogger(boolean closeExternalLogger) {
+		this.closeExternalLogger = closeExternalLogger;
+	}
+
 }
 

@@ -1,5 +1,6 @@
 package io.github.awidesky.guiUtil;
 
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,4 +72,12 @@ public class StringLogger extends AbstractLogger {
 	protected void writeString(Level level, CharSequence str) {
 		list.add(getPrefix(level) + str);
 	}
+	
+	@Override
+	protected LoggerOutputStream getLoggerOutputStream(Level level, boolean autoFlush, Charset charset) {
+		LoggerOutputStream ret = super.getLoggerOutputStream(level, autoFlush, charset);
+		ret.setCloseExternalLogger(false);
+		return ret;
+	}
+	
 }

@@ -358,7 +358,11 @@ public abstract class AbstractLogger implements Logger {
 
 	@Override
 	public PrintStream toPrintStream(Level level, boolean autoFlush, Charset charset) {
-		return new PrintStream(new LoggerOutputStream(this, level == null ? this.level : level, charset), autoFlush, charset);
+		return new PrintStream(getLoggerOutputStream(level, autoFlush, charset), autoFlush, charset);
+	}
+
+	protected LoggerOutputStream getLoggerOutputStream(Level level, boolean autoFlush, Charset charset) {
+		return new LoggerOutputStream(this, level == null ? this.level : level, charset);
 	}
 	
 	@Override

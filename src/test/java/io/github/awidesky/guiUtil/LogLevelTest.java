@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.github.awidesky.guiUtil.level.Level;
+import io.github.awidesky.guiUtil.simple.SimpleLogger;
+import io.github.awidesky.guiUtil.simple.StringLogger;
 
 class LogLevelTest {
 	

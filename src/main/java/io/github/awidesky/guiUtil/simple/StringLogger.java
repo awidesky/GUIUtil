@@ -1,4 +1,4 @@
-package io.github.awidesky.guiUtil;
+package io.github.awidesky.guiUtil.simple;
 
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.github.awidesky.guiUtil.AbstractLogger;
+import io.github.awidesky.guiUtil.LoggerOutputStream;
 import io.github.awidesky.guiUtil.level.Level;
 
 /**

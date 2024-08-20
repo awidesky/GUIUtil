@@ -9,6 +9,9 @@ import java.io.OutputStream;
 
 import org.junit.jupiter.api.Test;
 
+import io.github.awidesky.guiUtil.simple.SimpleLogger;
+import io.github.awidesky.guiUtil.simple.StringLogger;
+
 class WithMorePrefixTest {
 
 	@Test

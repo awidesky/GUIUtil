@@ -7,7 +7,7 @@
  * Please refer to LICENSE
  * */
 
-package io.github.awidesky.guiUtil;
+package io.github.awidesky.guiUtil.simple;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
+import io.github.awidesky.guiUtil.AbstractLogger;
 import io.github.awidesky.guiUtil.level.Level;
 
 /**

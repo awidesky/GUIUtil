@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 import io.github.awidesky.guiUtil.level.Level;
+import io.github.awidesky.guiUtil.simple.SimpleLogger;
 
 class LoggerPrintStreamTest {
 

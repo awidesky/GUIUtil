@@ -1,7 +1,6 @@
 package io.github.awidesky.guiUtil.simple;
 
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,21 +18,24 @@ import io.github.awidesky.guiUtil.level.Level;
  */
 public class StringLogger extends AbstractLogger {
 
-	private List<String> list = Collections.synchronizedList(new LinkedList<>());
+	private final List<String> list;
 	
 	/**
-	 * Creates a new StringLogger, without automatic line flushing,
-	 * and with {@code printLogLevel} set to {@code false}.
+	 * Creates a new StringLogger with {@code printLogLevel}
+	 * set to {@code false}.
 	 */
 	public StringLogger() {
-		this(false);
+		this(new LinkedList<>());
 	}
+	
 	/**
-	 * Creates a new StringLogger,
-	 * with {@code printLogLevel} set to {@code false}. 
+	 * Initialize the {@code String} list with given parameter,
+	 * and set {@code printLogLevel} to {@code false}.
+	 * @param list
 	 */
-	public StringLogger(boolean autoFlush) {
+	protected StringLogger(List<String> list) {
 		setPrintLogLevel(false);
+		this.list = list;
 	}
 	
 	/**

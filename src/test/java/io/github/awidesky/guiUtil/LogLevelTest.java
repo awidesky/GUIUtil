@@ -34,7 +34,7 @@ class LogLevelTest {
 	void test() {
 		Arrays.stream(Level.values())
 			.forEach(eachLevel -> {
-				StringLogger sl = new StringLogger(true);
+				StringLogger sl = new StringLogger();
 				levelIterateTest(eachLevel, sl, sl::getString);
 			});
 	}

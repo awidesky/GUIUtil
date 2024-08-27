@@ -30,6 +30,7 @@ import io.github.awidesky.guiUtil.level.Level;
 public abstract class AbstractLogger implements Logger {
 
 	protected DateFormat datePrefix = null;
+	protected boolean printThreadPrefix = false;
 	protected String prefix = null;
 	protected boolean printLogLevel = true;
 	protected Level level = Level.getRootLogLevel();
@@ -51,6 +52,11 @@ public abstract class AbstractLogger implements Logger {
 		this.printLogLevel = flag;
 	}
 	
+	@Override
+	public void setPrintThreadName(boolean flag) {
+		this.printThreadPrefix = flag;
+	}
+	
 	/**
 	 * Generates prefix String(date prefix + additional prefix)
 	 * @param level
@@ -59,6 +65,7 @@ public abstract class AbstractLogger implements Logger {
 		StringBuilder sb = new StringBuilder("");
 		if(printLogLevel) sb.append(level.getPrefixText());
 		if(datePrefix != null) sb.append(datePrefix.format(new Date()));
+		if(printThreadPrefix) sb.append("[").append(Thread.currentThread().getName()).append("]");
 		if(prefix != null) sb.append(prefix);
 		return sb.toString();
 	}

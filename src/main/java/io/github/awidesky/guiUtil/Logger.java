@@ -63,6 +63,13 @@ public interface Logger extends Leveled, Closeable {
 	 * @param flag
 	 */
 	public void setPrintLogLevel(boolean flag);
+	/**
+	 * If parameter is true, the name of the Thread will be printed as prefix.
+	 * 
+	 * @param flag
+	 * @see Thread#getName()
+	 */
+	public void setPrintThreadName(boolean flag);
 	
 	/**
 	 * Print a new line without printing any prefixes, regardless of level.

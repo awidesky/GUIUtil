@@ -23,10 +23,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
+import io.github.awidesky.guiUtil.formatter.LogFormatter;
+import io.github.awidesky.guiUtil.formatter.SimpleLogFormatter;
 import io.github.awidesky.guiUtil.level.Level;
 import io.github.awidesky.guiUtil.level.Leveled;
-import io.github.awidesky.guiUtil.prefix.PrefixFormatter;
-import io.github.awidesky.guiUtil.prefix.SimplePrefixFormatter;
 
 
 /**
@@ -55,7 +55,7 @@ public class LoggerThread extends Thread implements Leveled {
 	
 	public volatile boolean isStop = false;
 	private Level level = Level.getRootLogLevel();
-	private PrefixFormatter prefix = new SimplePrefixFormatter();
+	private LogFormatter formatter = new SimpleLogFormatter();
 	
 	/** Creates a new logger thread. */
 	public LoggerThread() { super("LoggerThread"); }
@@ -221,30 +221,30 @@ public class LoggerThread extends Thread implements Leveled {
 	}
 	
 	/**
-	 * Set main prefix formatter of this {@code LoggerThread}.
-	 * prefix of child {@code TaskLogger} generated after this call will set to 
-	 * the given {@code prefix}.<br>
+	 * Set main log formatter of this {@code LoggerThread}.
+	 * formatter of child {@code TaskLogger} generated after this call will set to 
+	 * the given {@code formatter}.<br>
 	 * Children {@code TaskLogger}s who created previously is not effected.
 	 * 
-	 * @see LoggerThread#setPrefixAllChildren(UnaryOperator)
+	 * @see LoggerThread#setFormatterAllChildren(UnaryOperator)
 	 * */
-	public void setPrefixFormatter(PrefixFormatter prefix) {
-		this.prefix = prefix;
+	public void setLogFormatter(LogFormatter formatter) {
+		this.formatter = formatter;
 	}
 	/**
-	 * Set prefix formatter of this {@code LoggerThread} and all existing children {@code TaskLogger}s,
+	 * Set log formatter of this {@code LoggerThread} and all existing children {@code TaskLogger}s,
 	 * using the given {@code UnaryOperator}.
-	 * {@code PrefixFormatter} field of each {@code TaskLogger} will applied to given {@code UnaryOperator},
-	 * and the return value will set to {@code PrefixFormatter} field of the {@code TaskLogger}.
+	 * {@code LogFormatter} field of each {@code TaskLogger} will applied to given {@code UnaryOperator},
+	 * and the return value will set to {@code LogFormatter} field of the {@code TaskLogger}.
 	 * <br>
-	 * The {@code LoggerThread}'s main prefix formatter will changed by the given {@code prefixChanger},
-	 * and used as the default prefix formatter of child {@code TaskLogger}s that generated after this call.
+	 * The {@code LoggerThread}'s main log formatter will changed by the given {@code formatChanger},
+	 * and used as the default log formatter of child {@code TaskLogger}s that generated after this call.
 	 * <p>
 	 * Children {@code TaskLogger}s who created previously are also changed to new format using the {@code UnaryOperator}.
 	 * */
-	public void setPrefixAllChildren(UnaryOperator<PrefixFormatter> prefixChanger) {
-		this.prefix = prefixChanger.apply(prefix);
-		children.stream().forEach(l -> l.setPrefixFormatter(prefixChanger.apply(l.getPrefixFormatter())));
+	public void setFormatterAllChildren(UnaryOperator<LogFormatter> formatterChanger) {
+		this.formatter = formatterChanger.apply(formatter);
+		children.stream().forEach(l -> l.setLogFormatter(formatterChanger.apply(l.getLogFormatter())));
 	}
 	
 	/**
@@ -276,20 +276,20 @@ public class LoggerThread extends Thread implements Leveled {
 	 * {@code LoggerBuilder#getLogger()} and {@code LoggerBuilder#getLogger()} methods.
 	 * Generated {@code TaskLogger} will be managed by outer {@code LoggerThread} object.
 	 * <p>
-	 * The {@code PrefixFormatter}, {@code Level}, {@code prefixString} properties of 
-	 * generated logger will set to {@code LoggerThread#prefix}, {@code LoggerThread#level},
+	 * The {@code LogFormatter}, {@code Level}, {@code prefix} properties of 
+	 * generated logger will set to {@code LoggerThread#formatter}, {@code LoggerThread#level},
 	 * {@code null} in default, and can be specified via setter methods in {@code LoggerBuilder}.<br>
-	 * {@code LoggerBuilder#setClonePrefixFormatter(boolean)} can define whether 
-	 * the prefix formatter should be cloned or not when generating the logger instance.
-	 * If {@code false}(default), every loggers generated will share same prefix formatter instance,
-	 * else, the prefix formatter will be cloned each time the logger is generated.
+	 * {@code LoggerBuilder#setCloneLogFormatter(boolean)} can define whether 
+	 * the log formatter should be cloned or not when generating the logger instance.
+	 * If {@code false}(default), every loggers generated will share same log formatter instance,
+	 * else, the log formatter will be cloned each time the logger is generated.
 	 */
 	public class LoggerBuilder {
 		
-		private PrefixFormatter childPrefixFormatter = LoggerThread.this.prefix;
+		private LogFormatter childLogFormatter = LoggerThread.this.formatter;
 		private Level childLevel = LoggerThread.this.level;
-		private String childPrefixString = null;
-		private boolean clonePrefixFormatter = false;
+		private String childPrefix = null;
+		private boolean cloneLogFormatter = false;
 		
 		/**
 		 * Specifies log level.
@@ -301,47 +301,47 @@ public class LoggerThread extends Thread implements Leveled {
 			return this;
 		}
 		/**
-		 * Specifies prefix formatter.<br>
-		 * Given prefix formatter instance will be shared among generated loggers,
-		 * hence, {@code PrefixFormatter#pattern(String)} will affect every child logger
+		 * Specifies log formatter.<br>
+		 * Given log formatter instance will be shared among generated loggers,
+		 * hence, {@code LogFormatter#pattern(String)} will affect every child logger
 		 * generated by this builder.
-		 * Set {@code LoggerBuilder#setClonePrefixFormatter(boolean)} to {@code true}
-		 * to clone prefix formatter instead of share.
+		 * Set {@code LoggerBuilder#setCloneLogFormatter(boolean)} to {@code true}
+		 * to clone log formatter instead of share.
 		 * 
-		 * @param prefix the prefix to use.
+		 * @param formatter the formatter to use.
 		 * @return This builder instance
 		 */
-		public LoggerBuilder setPrefixFormatter(PrefixFormatter prefix) {
-			childPrefixFormatter = prefix;
+		public LoggerBuilder setLogFormatter(LogFormatter formatter) {
+			childLogFormatter = formatter;
 			return this;
 		}
 		/**
 		 * Specifies additional prefix {@code String}.
-		 * @param prefixString the additional prefix {@code String}.
+		 * @param prefix the additional prefix {@code String}.
 		 * @return This builder instance
 		 */
-		public LoggerBuilder setPrefixString(String prefixString) {
-			this.childPrefixString  = prefixString;
+		public LoggerBuilder setPrefix(String prefix) {
+			this.childPrefix  = prefix;
 			return this;
 		}
 		/**
-		 * Specifies whether to clone {@code PrefixFormatter}
-		 * @param clonePrefixFormatter
+		 * Specifies whether to clone {@code LogFormatter}
+		 * @param cloneLogFormatter
 		 * @return
 		 */
-		public LoggerBuilder setClonePrefixFormatter(boolean clonePrefixFormatter) {
-			this.clonePrefixFormatter  = clonePrefixFormatter;
+		public LoggerBuilder setCloneLogFormatter(boolean cloneLogFormatter) {
+			this.cloneLogFormatter  = cloneLogFormatter;
 			return this;
 		}
-		private PrefixFormatter getPrefixFormatter() {
-			return clonePrefixFormatter ? childPrefixFormatter.clone() : childPrefixFormatter;
+		private LogFormatter getLogFormatter() {
+			return cloneLogFormatter ? childLogFormatter.clone() : childLogFormatter;
 		}
 		
 		/**
 		 * Returns a new {@code TaskLogger} that submits logs to the logger thread with specified properties.
 		 * */
 		public TaskLogger getLogger() {
-			TaskLogger newLogger = new TaskLogger(getPrefixFormatter(), childLevel) {
+			TaskLogger newLogger = new TaskLogger(getLogFormatter(), childLevel) {
 
 				@Override
 				public void queueLogTask(Consumer<PrintWriter> logTask) {
@@ -359,7 +359,7 @@ public class LoggerThread extends Thread implements Leveled {
 				}
 				
 			};
-			newLogger.setPrefixString(childPrefixString);
+			newLogger.setPrefix(childPrefix);
 			children.add(newLogger);
 			return newLogger;
 		}
@@ -371,7 +371,7 @@ public class LoggerThread extends Thread implements Leveled {
 		 * @see TaskBufferedLogger#flush()
 		 * */
 		public TaskBufferedLogger getBufferedLogger() {
-			TaskBufferedLogger newLogger = new TaskBufferedLogger(getPrefixFormatter(), childLevel) {
+			TaskBufferedLogger newLogger = new TaskBufferedLogger(getLogFormatter(), childLevel) {
 
 				@Override
 				public void queueLogTask(Consumer<PrintWriter> logTask) {
@@ -390,7 +390,7 @@ public class LoggerThread extends Thread implements Leveled {
 				}
 				
 			};
-			newLogger.setPrefixString(childPrefixString);
+			newLogger.setPrefix(childPrefix);
 			children.add(newLogger);
 			return newLogger;
 		}

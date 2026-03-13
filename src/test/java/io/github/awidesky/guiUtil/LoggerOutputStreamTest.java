@@ -10,8 +10,8 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 
+import io.github.awidesky.guiUtil.formatter.NullLogFormatter;
 import io.github.awidesky.guiUtil.level.Level;
-import io.github.awidesky.guiUtil.prefix.NullPrefixFormatter;
 import io.github.awidesky.guiUtil.simple.SimpleLogger;
 
 class LoggerPrintStreamTest {
@@ -26,7 +26,7 @@ class LoggerPrintStreamTest {
 		try(Logger l = new SimpleLogger(sw, true);
 			PrintStream ps = l.toPrintStream(level, true, charset);) {
 			
-			l.setPrefixFormatter(NullPrefixFormatter.instance());
+			l.setLogFormatter(NullLogFormatter.instance());
 			ps.print(msg);
 			
 		}

@@ -12,8 +12,8 @@ package io.github.awidesky.guiUtil.thread;
 import java.io.Flushable;
 import java.io.StringWriter;
 
+import io.github.awidesky.guiUtil.formatter.LogFormatter;
 import io.github.awidesky.guiUtil.level.Level;
-import io.github.awidesky.guiUtil.prefix.PrefixFormatter;
 
 /**
  * A {@code TaskLogger} that buffer all logs to {@code StringWriter} and does not actually prints it
@@ -27,8 +27,8 @@ public abstract class TaskBufferedLogger extends TaskLogger implements Flushable
 	/**
 	 * Creates a task based buffered logger.
 	 * */
-	TaskBufferedLogger(PrefixFormatter prefix, Level level) {
-		super(prefix, level);
+	TaskBufferedLogger(LogFormatter formatter, Level level) {
+		super(formatter, level);
 	}
 
 	@Override
@@ -37,11 +37,11 @@ public abstract class TaskBufferedLogger extends TaskLogger implements Flushable
 	}
 	
 	@Override
-	protected void writeString(Level level, CharSequence data) {
-		buffer.append(prefix.format(level, prefixStr) + data);
-		newLine();
+	protected void consumeLogString(String str) {
+		buffer.append(str);
+		newLine();		
 	}
-	
+
 	/**
 	 * Empty the buffer and submit logs to the parent {@code LoggerThread}.<br>
 	 * Buffered logs are submitted if and only if {@code flush()} or {@code close()} called.

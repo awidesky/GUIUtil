@@ -13,8 +13,8 @@ import java.io.PrintWriter;
 import java.util.function.Consumer;
 
 import io.github.awidesky.guiUtil.AbstractLogger;
+import io.github.awidesky.guiUtil.formatter.LogFormatter;
 import io.github.awidesky.guiUtil.level.Level;
-import io.github.awidesky.guiUtil.prefix.PrefixFormatter;
 
 /**
  * An abstract Logger class for one-consumer, multi-provider model that manages each logs as "task"
@@ -34,9 +34,9 @@ public abstract class TaskLogger extends AbstractLogger {
 	/**
 	 * Creates a task based logger.
 	 * */
-	TaskLogger(PrefixFormatter prefix, Level level) {
+	TaskLogger(LogFormatter formatter, Level level) {
 		setLogLevel(level);
-		this.prefix = prefix;
+		this.formatter = formatter;
 	}
 
 	/**
@@ -53,16 +53,16 @@ public abstract class TaskLogger extends AbstractLogger {
 	}
 
 	@Override
-	protected void writeString(Level level, CharSequence str) {
-		queueLogTask(getLogTask(level, str));
+	protected void consumeLogString(String str) {
+		queueLogTask(getLogTask(str));
 	}
 
 	/**
-	 * Prefix will printed only once even if the String is multiple line.
+	 * Generate a task that take {@link PrintWriter} and print formatted log.
 	 * */
-	protected Consumer<PrintWriter> getLogTask(Level level, CharSequence data) {
+	protected Consumer<PrintWriter> getLogTask(String str) {
 		return (logTo) -> {
-			logTo.println(prefix.format(level, prefixStr) + data);
+			logTo.println(str);
 		};
 	}
 	

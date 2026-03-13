@@ -17,9 +17,9 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import io.github.awidesky.guiUtil.formatter.LogFormatter;
+import io.github.awidesky.guiUtil.formatter.SimpleLogFormatter;
 import io.github.awidesky.guiUtil.level.Level;
-import io.github.awidesky.guiUtil.prefix.PrefixFormatter;
-import io.github.awidesky.guiUtil.prefix.SimplePrefixFormatter;
 
 
 /**
@@ -29,28 +29,28 @@ import io.github.awidesky.guiUtil.prefix.SimplePrefixFormatter;
  * */
 public abstract class AbstractLogger implements Logger {
 
-	protected String prefixStr = null;
-	protected PrefixFormatter prefix = new SimplePrefixFormatter();
+	protected String prefix = null;
+	protected LogFormatter formatter = new SimpleLogFormatter();
 	protected Level level = Level.getRootLogLevel();
 	
 	@Override
-	public Logger setPrefixFormatter(PrefixFormatter prefix) {
-		this.prefix = prefix;
+	public Logger setLogFormatter(LogFormatter formatter) {
+		this.formatter = formatter;
 		return this;
 	}
 	
 	@Override
-	public PrefixFormatter getPrefixFormatter() {
-		return prefix;
+	public LogFormatter getLogFormatter() {
+		return formatter;
 	}
 
 	@Override
-	public String getPrefixString() {
-		return prefixStr;
+	public String getPrefix() {
+		return prefix;
 	}
 	@Override
-	public void setPrefixString(String prefixString) {
-		this.prefixStr = prefixString;
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 	
 	/**
@@ -323,21 +323,33 @@ public abstract class AbstractLogger implements Logger {
 	/**
 	 * Actually write the log with given level and string data.
 	 * Implementations typically evaluate final string by<br>
-	 * {@code prefix.format(level, prefixStr) + str}<br>
+	 * {@code formatter.format(level, prefix, msg)}<br>
 	 * and write to external logging destination.
 	 * 
 	 * @param level the log level
-	 * @param str the string data to log
+	 * @param msg the string data to log
 	 */
-	protected abstract void writeString(Level level, CharSequence str);
+	protected void writeString(Level level, CharSequence msg) {
+		consumeLogString(formatter.format(level, prefix, msg));
+	}
+	
+	
+	/**
+	 * Actually write the log with given level and string data.
+	 * Implementations typically evaluate final string by<br>
+	 * {@code formatter.format(level, prefix, msg)}<br>
+	 * and write to external logging destination.
+	 * 
+	 * @param level the log level
+	 * @param msg the string data to log
+	 */
+	protected abstract void consumeLogString(String str);
 	
 	
 	@Override
 	public Logger withMorePrefix(String morePrefix, boolean closeParentIfChildClosed) {
 		final AbstractLogger parent = this;
 		return new AbstractLogger() {
-			private final String addedPrefix = morePrefix;
-			
 			@Override
 			public void close() throws IOException {
 				if(closeParentIfChildClosed) parent.close();
@@ -349,10 +361,45 @@ public abstract class AbstractLogger implements Logger {
 			}
 			
 			@Override
-			protected void writeString(Level level, CharSequence str) {
-				parent.writeString(level, addedPrefix + str);
+			protected void writeString(Level level, CharSequence msg) {
+				consumeLogString(parent.formatter.format(level,
+						(parent.prefix == null ? "" : parent.prefix) + morePrefix, msg));
+			}
+
+			@Override
+			protected void consumeLogString(String str) {
+				parent.consumeLogString(str);
 			}
 		};
+	}
+
+	@Override
+	public Logger getChildlogger(LogFormatter additionalFormatter, boolean closeParentIfChildClosed) {
+		final AbstractLogger parent = this;
+		Logger ret = new AbstractLogger() {
+			@Override
+			public void close() throws IOException {
+				if(closeParentIfChildClosed) parent.close();
+			}
+			
+			@Override
+			public void newLine() {
+				parent.newLine();
+			}
+			
+			@Override
+			protected void writeString(Level level, CharSequence msg) {
+				parent.writeString(level, this.formatter.format(level, this.prefix, msg));
+			}
+
+			@Override
+			protected void consumeLogString(String str) {
+				// child logger does not use this method; it delegates final log string generation to parent.
+				throw new UnsupportedOperationException("This method should not be called!");
+			}
+		};
+		ret.setLogFormatter(additionalFormatter);
+		return ret;
 	}
 
 	@Override
@@ -366,7 +413,7 @@ public abstract class AbstractLogger implements Logger {
 	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [" + "level=" + level + ", prefixPattern=" + prefix + "]";
+		return getClass().getSimpleName() + " [" + "level=" + level + ", LogFormatter=" + formatter + "]";
 	}
 	
 }

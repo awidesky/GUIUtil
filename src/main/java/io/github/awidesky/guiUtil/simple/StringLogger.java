@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import io.github.awidesky.guiUtil.AbstractLogger;
 import io.github.awidesky.guiUtil.LoggerOutputStream;
+import io.github.awidesky.guiUtil.formatter.NullLogFormatter;
 import io.github.awidesky.guiUtil.level.Level;
-import io.github.awidesky.guiUtil.prefix.NullPrefixFormatter;
 
 /**
  * Gather logs in a internal buffer.
@@ -23,8 +23,8 @@ public class StringLogger extends AbstractLogger {
 	
 	/**
 	 * Creates a new StringLogger with {@code printLogLevel}
-	 * set to {@code false}, and {@code PrefixFormatter} set to
-	 * {@link NullPrefixFormatter}.
+	 * set to {@code false}, and {@code LogFormatter} set to
+	 * {@link NullLogFormatter}.
 	 */
 	public StringLogger() {
 		this(new LinkedList<>());
@@ -32,11 +32,11 @@ public class StringLogger extends AbstractLogger {
 	
 	/**
 	 * Initialize the {@code String} list with given parameter,
-	 * and {@code PrefixFormatter} set to {@link NullPrefixFormatter}.
+	 * and {@code LogFormatter} set to {@link NullLogFormatter}.
 	 * @param list the buffer to store logged Strings
 	 */
 	protected StringLogger(List<String> list) {
-		prefix = NullPrefixFormatter.instance();
+		formatter = NullLogFormatter.instance();
 		this.list = list;
 	}
 	
@@ -82,10 +82,10 @@ public class StringLogger extends AbstractLogger {
 	 */
 	@Override
 	public void close() {}
-	
+
 	@Override
-	protected void writeString(Level level, CharSequence str) {
-		list.add(prefix.format(level, prefixStr) + str);
+	protected void consumeLogString(String str) {
+		list.add(str.toString());		
 	}
 	
 	@Override

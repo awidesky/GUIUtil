@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.github.awidesky.guiUtil.prefix.SimplePrefixFormatter;
+import io.github.awidesky.guiUtil.formatter.SimpleLogFormatter;
 import io.github.awidesky.guiUtil.thread.LoggerThread;
 import io.github.awidesky.guiUtil.thread.TaskBufferedLogger;
 import io.github.awidesky.guiUtil.thread.TaskLogger;
@@ -32,7 +32,7 @@ class TaskLoggerTest {
 	@BeforeEach
 	void setUpBeforeTest() {
 		lt = new LoggerThread();
-		lt.setPrefixFormatter(new SimplePrefixFormatter("[Thread %p] "));
+		lt.setLogFormatter(new SimpleLogFormatter("[Thread %p] %m"));
 		sw = new StringWriter();
 		lt.setLogDestination(sw, true);
 		lt.start();
@@ -43,7 +43,7 @@ class TaskLoggerTest {
 		System.out.println("\n==========================TaskLoggerTest==========================");
 		List<TaskLogger> loggers = new LinkedList<TaskLogger>();
 		for(int i = 0; i < LOGGER_NUM; i++) {
-			loggers.add(lt.getLoggerBuilder().setPrefixString(String.valueOf(i)).getLogger());
+			loggers.add(lt.getLoggerBuilder().setPrefix(String.valueOf(i)).getLogger());
 		}
 		
 		loggers.stream().parallel().forEach(t -> strList.forEach(t::info));
@@ -67,7 +67,7 @@ class TaskLoggerTest {
 		System.out.println("\n==========================BufferedTaskLoggertest==========================");
 		List<TaskBufferedLogger> loggers = new LinkedList<TaskBufferedLogger>();
 		for(int i = 0; i < LOGGER_NUM; i++) {
-			loggers.add(lt.getLoggerBuilder().setPrefixString(String.valueOf(i)).getBufferedLogger());
+			loggers.add(lt.getLoggerBuilder().setPrefix(String.valueOf(i)).getBufferedLogger());
 		}
 			
 		loggers.stream().parallel().forEach(t -> strList.forEach(t::info));

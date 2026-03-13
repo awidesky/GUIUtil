@@ -16,7 +16,6 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 
 import io.github.awidesky.guiUtil.AbstractLogger;
-import io.github.awidesky.guiUtil.level.Level;
 
 /**
  * A Simple Logger class that prints log to given {@code OutputStream}.
@@ -69,7 +68,7 @@ public class SimpleLogger extends AbstractLogger {
 	}
 	
 	/**
-	 * Logs an empty new line without prefix
+	 * Logs an empty new line without formatter
 	 * */
 	@Override
 	public void newLine() {
@@ -89,8 +88,8 @@ public class SimpleLogger extends AbstractLogger {
 
 
 	@Override
-	public void writeString(Level level, CharSequence str) {
-		logTo.println(prefix.format(level, prefixStr) + str);
+	protected void consumeLogString(String str) {
+		logTo.println(str);
 	}
 
 }

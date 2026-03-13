@@ -32,8 +32,8 @@ public class ConsoleLogger extends AbstractLogger {
 		if(autoFlush) System.out.flush();
 	}
 	@Override
-	protected void writeString(Level level, CharSequence str) {
-		System.out.println(prefix.format(level, prefixStr) + str);
+	protected void consumeLogString(String str) {
+		System.out.println(str);		
 	}
 	
 	/**

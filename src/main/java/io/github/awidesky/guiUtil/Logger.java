@@ -13,10 +13,10 @@ import java.io.Closeable;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 
+import io.github.awidesky.guiUtil.formatter.LogFormatter;
+import io.github.awidesky.guiUtil.formatter.SimpleLogFormatter;
 import io.github.awidesky.guiUtil.level.Level;
 import io.github.awidesky.guiUtil.level.Leveled;
-import io.github.awidesky.guiUtil.prefix.PrefixFormatter;
-import io.github.awidesky.guiUtil.prefix.SimplePrefixFormatter;
 
 
 
@@ -34,40 +34,40 @@ public interface Logger extends Leveled, Closeable {
 	public static final Logger nullLogger = new AbstractLogger() {
 		@Override public void newLine() {}
 		@Override public void close() {}
-		@Override public void writeString(Level level, CharSequence str) {}
+		@Override public void consumeLogString(String str) {}
 	}; 
 
 
 	
 	/**
-	 * Set format of the prefix for this {@code Logger} instance.
+	 * Set log formatter for this {@code Logger} instance.
 	 * 
 	 * @return this logger
-	 * @see SimplePrefixFormatter
+	 * @see SimpleLogFormatter
 	 * */
-	public Logger setPrefixFormatter(PrefixFormatter prefix);
+	public Logger setLogFormatter(LogFormatter formatter);
 	
 	/**
-	 * Get format of the prefix for this {@code Logger} instance.
+	 * Get log formatter for this {@code Logger} instance.
 	 * 
-	 * @return the {@code PrefixFormatter} instance of this logger
+	 * @return the {@code LogFormatter} instance of this logger
 	 * */
-	public PrefixFormatter getPrefixFormatter();
+	public LogFormatter getLogFormatter();
 	
 	/**
 	 * Return the additional prefix string.
 	 * @return the additional prefix string. May be {@code null}
 	 */
-	public String getPrefixString();
+	public String getPrefix();
 	
 	/**
 	 * Set additional prefix for this logger instance
-	 * that can be printed via {@code PrefixFormatter}.
+	 * that can be printed via {@code LogFormatter}.
 	 * 
-	 * @see PrefixFormatter
-	 * @param prefixString {@code null} is permitted.
+	 * @see LogFormatter
+	 * @param prefix {@code null} is permitted.
 	 */
-	public void setPrefixString(String prefixString);
+	public void setPrefix(String prefix);
 	
 	/**
 	 * Print a new line without printing any prefixes, regardless of level.
@@ -244,7 +244,13 @@ public interface Logger extends Leveled, Closeable {
 	/**
 	 * Generate a child logger that adds additional prefix.
 	 * Returned logger is just a proxy logger that writes all output to its parent ({@code this}).
-	 * with additional prefix.
+	 * with additional prefix.<p>
+	 * 
+	 * e.g. When parent logger would print like :<br>
+	 * {@code [INFO] [prefix] Test logging}<br>
+	 * It's child logger return with {@code logger.withMorePrefix(" + additional" , false);} 
+	 * would print like :<br>
+	 * {@code [INFO] [prefix + additional] Test logging}
 	 * 
 	 * @param morePrefix additional prefix that'll appended in output.
 	 * @param closeParentIfChildClosed if {@code true}, the parent({@code this}) will closed
@@ -254,4 +260,26 @@ public interface Logger extends Leveled, Closeable {
 	 */
 	public Logger withMorePrefix(String morePrefix, boolean closeParentIfChildClosed);
 
+	/**
+	 * Generate a child logger that uses additional prefix.
+	 * Returned child logger formats the message with it's formatter, 
+	 * and call {@code writeString} of parent and give the result as parameter {@code msg},
+	 * which will again formatted as {@code %m} component in parent's formatter.<br>
+	 * The child's formatter is set to {@code additionalFormatter}, but can be changed via
+	 * {@link Logger#setLogFormatter(LogFormatter)}.
+	 * <p>
+	 * 
+	 * e.g. When parent logger would print like :<br>
+	 * {@code [INFO] [prefix] Test logging}<br>
+	 * It's child logger return with {@code logger.getchildlogger(new SimpleLogFormatter("%%%m%%") , false);} 
+	 * would print like :<br>
+	 * {@code [INFO] [prefix] %Test logging%}
+	 * 
+	 * @param additionalFormatter additional formatter that'll used before parent's formatter
+	 * @param closeParentIfChildClosedif {@code true}, the parent({@code this}) will closed
+	 * 									if the returned child logger is closed.
+
+	 * @return new child logger with additional formatter
+	 */
+	public Logger getChildlogger(LogFormatter additionalFormatter, boolean closeParentIfChildClosed);
 }

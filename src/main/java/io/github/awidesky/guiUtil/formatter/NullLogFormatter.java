@@ -29,16 +29,7 @@ public class NullLogFormatter extends LogFormatter {
 	/**
 	 * The pattern is {@code null}.
 	 */
-	private NullLogFormatter() { pattern = null; }
-	
-	/**
-	 * Does not set pattern field, just returns itself.
-	 * pattern is always {@code null}.
-	 */
-	@Override
-	public LogFormatter setPattern(String pattern) {
-		return this;
-	}
+	private NullLogFormatter() {}
 	
 	/**
 	 * Just returns the {@code logstr}.

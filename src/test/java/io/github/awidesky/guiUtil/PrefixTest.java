@@ -50,13 +50,11 @@ class PrefixTest {
 		s.setLogLevel(Level.TRACE);
 		s.setLogFormatter(NullLogFormatter.instance());
 		NullLogFormatter other = NullLogFormatter.instance();
-		other.setPattern("other pattern");
 		for(Level l : Level.values()) {
 			s.logInLevel(l, sampleText);
 			assertEquals(sampleText, s.getString());
 			assertEquals(sampleText, other.format(l, "pref", sampleText));
 		}
-		assertEquals(null, other.getPattern());
 		assertTrue(other == s.getLogFormatter());
 		
 		s.close();

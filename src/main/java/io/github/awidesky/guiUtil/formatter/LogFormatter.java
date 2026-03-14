@@ -6,24 +6,6 @@ import io.github.awidesky.guiUtil.level.Level;
  * A helper class for specifying log format(pattern).
  */
 public abstract class LogFormatter implements Cloneable {
-	protected String pattern;
-	
-	/**
-	 * Set pattern for the log format
-	 * @param pattern
-	 * @return this object
-	 */
-	public LogFormatter setPattern(String pattern) {
-		this.pattern = pattern;
-		return this;
-	}
-	/**
-	 * Get the pattern for the log format
-	 * @return pattern
-	 */
-	public String getPattern() {
-		return pattern;
-	}
 	
 	/**
 	 * Generate a log string with given level, prefix, and message.
@@ -34,11 +16,6 @@ public abstract class LogFormatter implements Cloneable {
 	 * @return
 	 */
 	public abstract String format(Level level, String prefix, CharSequence msg);
-	
-	@Override
-	public String toString() {
-		return getClass().getName() + " [pattern=\"" + pattern + "\"]";
-	}
 	
 	/**
 	 * Clone the {@code LogFormatter} instance.<br>

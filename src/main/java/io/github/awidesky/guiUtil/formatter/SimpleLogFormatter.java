@@ -14,6 +14,7 @@ import io.github.awidesky.guiUtil.level.Level;
 
 public class SimpleLogFormatter extends LogFormatter {
 	
+	private static final ThreadLocal<StringBuilder> sbLocal = ThreadLocal.withInitial(() -> new StringBuilder(256));
 	private List<Token> tokens;
 	
 	public SimpleLogFormatter() {
@@ -61,16 +62,16 @@ public class SimpleLogFormatter extends LogFormatter {
 	            literal.append('%');
 	            break;
 	        case 'l':
-	            tokens.add(new LevelToken());
+	            tokens.add(LevelToken.instance());
 	            break;
 	        case 't':
-	            tokens.add(new ThreadToken());
+	            tokens.add(ThreadToken.instance());
 	            break;
 	        case 'p':
-	            tokens.add(new PrefixToken());
+	            tokens.add(PrefixToken.instance());
 	            break;
 	        case 'm':
-	            tokens.add(new MessageToken());
+	            tokens.add(MessageToken.instance());
 	            break;
 	        case 'd':
 	            i = parseDateToken(pattern, i, tokens);
@@ -104,7 +105,8 @@ public class SimpleLogFormatter extends LogFormatter {
 	
 	@Override
 	public String format(Level level, String prefix, CharSequence msg) {
-	    StringBuilder sb = new StringBuilder(pattern.length() + 32);
+	    StringBuilder sb = sbLocal.get();
+	    sb.setLength(0);
 
 	    for(Token t : tokens) {
 	        t.append(sb, level, prefix, msg);

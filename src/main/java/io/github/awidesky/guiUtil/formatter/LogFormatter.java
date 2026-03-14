@@ -20,9 +20,7 @@ public abstract class LogFormatter implements Cloneable {
 	/**
 	 * Clone the {@code LogFormatter} instance.<br>
 	 * Implementations can just return a new instance
-	 * with same {@code pattern} field.<br>
-	 * The {@code LogFormatter} instance is mutable since the pattern is
-	 * changeable via {@link LogFormatter#setPattern(String)}.
+	 * with shallow-copied fields.
 	 */
 	@Override
 	public abstract LogFormatter clone();

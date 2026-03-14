@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import io.github.awidesky.guiUtil.formatter.LogFormatter;
 import io.github.awidesky.guiUtil.formatter.SimpleLogFormatter;
 import io.github.awidesky.guiUtil.level.Level;
+import io.github.awidesky.guiUtil.simple.SysoutLogger;
 
 
 /**
@@ -321,11 +322,13 @@ public abstract class AbstractLogger implements Logger {
 	}
 	
 	/**
-	 * Actually write the log with given level and string data.
-	 * Implementations typically evaluate final string by<br>
-	 * {@code formatter.format(level, prefix, msg)}<br>
-	 * and write to external logging destination.
+	 * Format the message to final string by
+	 * {@code formatter.format(level, prefix, msg)}
+	 * and delegate logging implementation to {@link AbstractLogger#consumeLogString(String)};
 	 * 
+	 * <p>Subclass can override this method to to additional stuff with log level.
+	 * 
+	 * @see SysoutLogger
 	 * @param level the log level
 	 * @param msg the string data to log
 	 */
@@ -335,13 +338,9 @@ public abstract class AbstractLogger implements Logger {
 	
 	
 	/**
-	 * Actually write the log with given level and string data.
-	 * Implementations typically evaluate final string by<br>
-	 * {@code formatter.format(level, prefix, msg)}<br>
-	 * and write to external logging destination.
+	 * Actually write the log to logging destination.
 	 * 
-	 * @param level the log level
-	 * @param msg the string data to log
+	 * @param str the string to log
 	 */
 	protected abstract void consumeLogString(String str);
 	

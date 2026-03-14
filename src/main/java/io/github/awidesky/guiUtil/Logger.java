@@ -276,7 +276,7 @@ public interface Logger extends Leveled, Closeable {
 	 * {@code [INFO] [prefix] %Test logging%}
 	 * 
 	 * @param additionalFormatter additional formatter that'll used before parent's formatter
-	 * @param closeParentIfChildClosedif {@code true}, the parent({@code this}) will closed
+	 * @param closeParentIfChildClosed if {@code true}, the parent({@code this}) will closed
 	 * 									if the returned child logger is closed.
 
 	 * @return new child logger with additional formatter
